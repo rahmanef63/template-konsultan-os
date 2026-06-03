@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { fmtDate } from "@/components/templates/_shared/utils";
 import { PUBLIC_BASE } from "../../shared/nav-config";
 import { findArticle, SEED_ARTICLES } from "../../shared/insights-seed";
+import { CommentsSection } from "../../shared/comments-section";
 
 const TAG_TONE = {
   Strategi: "bg-violet-500/10 text-violet-600 dark:text-violet-300",
@@ -109,6 +110,8 @@ export function InsightsDetailPage({ slug }: { slug: string }) {
           </div>
         </section>
       )}
+
+      <CommentsSection kind="insights" slug={article.slug} title="Diskusi" />
     </article>
   );
 }

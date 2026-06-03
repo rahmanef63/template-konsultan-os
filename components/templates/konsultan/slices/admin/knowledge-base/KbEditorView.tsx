@@ -12,6 +12,8 @@ const META: EntityMeta = { label: "Article", labelPlural: "Knowledge Base" };
 export const FIELDS: FieldDef<KbArticle>[] = [
   { kind: "text", key: "title", label: "Judul" },
   { kind: "text", key: "slug", label: "Slug", mono: true },
+  { kind: "icon", key: "icon", label: "Ikon", hint: "Emoji / Lucide / Phosphor — tampil di daftar & detail." },
+  { kind: "imagePicker", key: "coverImage", label: "Cover", wide: true },
   {
     kind: "select",
     key: "category",

@@ -33,6 +33,8 @@ export const upsert = mutation({
     author: v.string(),
     updatedAt: v.number(),
     status: STATUS,
+    icon: v.optional(v.string()),
+    coverImage: v.optional(v.string()),
   },
   handler: async (ctx, { id, ...data }) => {
     if (id) {

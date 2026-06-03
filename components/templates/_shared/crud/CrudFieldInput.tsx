@@ -11,6 +11,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { IconPickerPopover, DynamicIcon } from "@/features/icon-picker";
+import {
+  ImagePickerButton,
+  ImageBanner,
+  parseImage,
+  imageRef,
+  unsplashSearchVia,
+} from "@/features/image-picker";
 import type { FieldDef } from "./types";
 
 export function CrudFieldInput<T>({
@@ -142,6 +151,48 @@ export function CrudFieldInput<T>({
               }}
             />
           )}
+        </div>
+      );
+    }
+    case "imagePicker": {
+      const cover = String(value ?? "");
+      return (
+        <div className="space-y-2">
+          <div className="flex items-center justify-end">
+            <ImagePickerButton
+              label={cover ? "Ganti gambar" : "Pilih gambar"}
+              title={field.label}
+              searchUnsplash={unsplashSearchVia("/api/unsplash")}
+              onChange={(img) => onChange(imageRef(img) ?? "")}
+            />
+          </div>
+          {cover ? (
+            <ImageBanner
+              image={parseImage(cover)}
+              searchUnsplash={unsplashSearchVia("/api/unsplash")}
+              onChange={(next) => onChange(next ? imageRef(next) ?? "" : "")}
+              className="h-32 w-full overflow-hidden rounded-md border border-border/60"
+            />
+          ) : (
+            <p className="rounded-md border border-dashed border-border/60 px-3 py-5 text-center text-xs text-muted-foreground">
+              Belum ada gambar — pilih warna, gradient, paste URL, atau cari di Unsplash.
+            </p>
+          )}
+        </div>
+      );
+    }
+    case "icon": {
+      const icon = String(value ?? "");
+      return (
+        <div className="flex items-center gap-2">
+          <IconPickerPopover value={icon} onChange={(next) => onChange(next)}>
+            <Button type="button" variant="outline" size="icon" aria-label={`Pilih ${field.label}`}>
+              {icon ? <DynamicIcon value={icon} size={18} /> : "+"}
+            </Button>
+          </IconPickerPopover>
+          <span className="text-xs text-muted-foreground">
+            {icon ? icon : "Belum ada ikon"}
+          </span>
         </div>
       );
     }

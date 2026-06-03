@@ -1,6 +1,7 @@
 import { authTables } from "@convex-dev/auth/server";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { commentsTables } from "./features/comments/_schema";
 
 // Konsultan OS — full schema (Convex target).
 // authTables = @convex-dev/auth. Content tables mirror the localStorage shape
@@ -8,6 +9,7 @@ import { v } from "convex/values";
 // Convex-backed store adapter maps 1:1 (frontend `id` <-> Convex `_id`).
 export default defineSchema({
   ...authTables,
+  ...commentsTables,
 
   konsultanClients: defineTable({
     name: v.string(),
@@ -59,6 +61,7 @@ export default defineSchema({
     progress: v.number(),
     startedAt: v.number(),
     endsAt: v.number(),
+    icon: v.optional(v.string()),
   }).index("by_status", ["status"]),
 
   konsultanInvoices: defineTable({
@@ -124,6 +127,8 @@ export default defineSchema({
     author: v.string(),
     updatedAt: v.number(),
     status: v.union(v.literal("draft"), v.literal("published"), v.literal("archived")),
+    icon: v.optional(v.string()),
+    coverImage: v.optional(v.string()),
   }).index("by_slug", ["slug"]),
 
   // Page-builder + landing: complex nested structures stored as blobs keyed by

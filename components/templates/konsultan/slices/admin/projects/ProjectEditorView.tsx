@@ -11,6 +11,7 @@ const META: EntityMeta = { label: "Project", labelPlural: "Projects" };
 
 export const FIELDS: FieldDef<Project>[] = [
   { kind: "text", key: "name", label: "Name" },
+  { kind: "icon", key: "icon", label: "Ikon", hint: "Emoji / Lucide / Phosphor." },
   { kind: "text", key: "clientId", label: "Client ID", mono: true },
   { kind: "text", key: "contractId", label: "Contract ID", mono: true },
   { kind: "textarea", key: "description", label: "Description", rows: 3 },

@@ -33,6 +33,10 @@ export type KbArticle = {
   author: string;
   updatedAt: number;
   status: KbStatus;
+  /** Icon token from the icon-picker slice (emoji | `lucide:Name` | `phosphor:Name`). */
+  icon?: string;
+  /** Cover image ref from the image-picker slice (URL | color | gradient token). */
+  coverImage?: string;
 };
 
 /** Derived analytics KPI tile shape (computed inside view, not stored). */

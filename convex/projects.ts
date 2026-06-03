@@ -30,6 +30,7 @@ export const upsert = mutation({
     progress: v.number(),
     startedAt: v.number(),
     endsAt: v.number(),
+    icon: v.optional(v.string()),
   },
   handler: async (ctx, { id, ...data }) => {
     if (id) {

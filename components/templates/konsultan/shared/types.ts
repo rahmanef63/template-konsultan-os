@@ -52,6 +52,8 @@ export type Project = {
   progress: number; // 0-100
   startedAt: number;
   endsAt: number;
+  /** Icon token from the icon-picker slice (emoji | `lucide:Name` | `phosphor:Name`). */
+  icon?: string;
 };
 
 export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue";

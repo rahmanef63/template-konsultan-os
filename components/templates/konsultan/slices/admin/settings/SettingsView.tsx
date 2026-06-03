@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { SectionHead } from "@/components/templates/_shared/ui/section-head";
 import { UpdateCard } from "@/components/admin/update-card";
 import { BackupCard } from "@/components/admin/backup-card";
+import { ThemePresetSwitcher } from "@/features/theme-presets";
 import { DEFAULT_SITE_CONFIG } from "../../../shared/site-config";
 
 export function SettingsView() {
@@ -52,6 +53,19 @@ export function SettingsView() {
             PPN default 11%, e-Faktur compatible. NPWP firma tersimpan di vault. Reminder otomatis 7 + 3 + 0
             hari sebelum jatuh tempo.
           </p>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/60 bg-card/60">
+        <CardContent className="flex items-center justify-between gap-4 p-5 text-sm">
+          <div>
+            <p className="font-medium text-foreground">Appearance</p>
+            <p className="text-muted-foreground">
+              Pilih display mode (light/dark/system) + color preset. Tersimpan
+              di browser, berlaku ke seluruh dashboard &amp; situs publik.
+            </p>
+          </div>
+          <ThemePresetSwitcher />
         </CardContent>
       </Card>
 
