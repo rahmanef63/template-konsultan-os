@@ -2,12 +2,14 @@ import {
   BookOpen,
   Briefcase,
   CalendarDays,
+  Database,
   FileSignature,
   FileText,
   LayoutDashboard,
   LayoutTemplate,
   LineChart,
   Newspaper,
+  NotebookPen,
   Receipt,
   ScrollText,
   Settings,
@@ -96,6 +98,8 @@ export function buildAdminPrimaryNav(state: State): AdminNavItem[] {
     { id: "documents",  label: "Documents",  href: `${ADMIN_BASE}/documents`,    icon: ScrollText,      count: state.documents.length },
     { id: "knowledge-base", label: "Knowledge Base", href: `${ADMIN_BASE}/knowledge-base`, icon: BookOpen, count: publishedKb || null },
     { id: "analytics",  label: "Analytics",  href: `${ADMIN_BASE}/analytics`,    icon: LineChart,       count: null },
+    { id: "notes",      label: "Notes",      href: `${ADMIN_BASE}/notes`,        icon: NotebookPen,     count: null },
+    { id: "database",   label: "Database",   href: `${ADMIN_BASE}/database`,     icon: Database,        count: null },
   ];
 }
 
