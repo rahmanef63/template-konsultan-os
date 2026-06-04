@@ -5,6 +5,7 @@ import { Suspense, type ReactNode } from "react";
 import { SiteShell } from "@/components/templates/_shared/ui/site-shell";
 import { ThemePresetSwitcher } from "@/features/theme-presets";
 import { StoreProvider } from "@/components/templates/konsultan/shared/store";
+import { SiteLoader } from "@/components/site-loader";
 import { DEFAULT_SITE_CONFIG } from "@/components/templates/konsultan/shared/site-config";
 import {
   FOOTER_COLUMNS,
@@ -46,6 +47,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <Suspense fallback={null}>
       <StoreProvider>
+      <SiteLoader brandLetter={DEFAULT_SITE_CONFIG.brandLetter} />
         <SiteShell
           brand={DEFAULT_SITE_CONFIG}
           homeHref={PUBLIC_BASE}
