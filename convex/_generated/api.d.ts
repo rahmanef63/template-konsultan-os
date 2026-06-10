@@ -32,6 +32,7 @@ import type * as proposals from "../proposals.js";
 import type * as seed from "../seed.js";
 import type * as settings from "../settings.js";
 import type * as setup from "../setup.js";
+import type * as subscribers from "../subscribers.js";
 import type * as update from "../update.js";
 import type * as users from "../users.js";
 
@@ -66,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   seed: typeof seed;
   settings: typeof settings;
   setup: typeof setup;
+  subscribers: typeof subscribers;
   update: typeof update;
   users: typeof users;
 }>;

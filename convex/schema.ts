@@ -133,6 +133,13 @@ export default defineSchema({
     coverImage: v.optional(v.string()),
   }).index("by_slug", ["slug"]),
 
+  subscribers: defineTable({
+    email: v.string(),
+    status: v.union(v.literal("pending"), v.literal("confirmed"), v.literal("unsubscribed")),
+    source: v.string(),
+    ts: v.number(),
+  }).index("by_email", ["email"]),
+
   // Page-builder + landing: complex nested structures stored as blobs keyed by
   // the frontend's string id (PageEntry.id / LandingSection.id).
   pages: defineTable({
