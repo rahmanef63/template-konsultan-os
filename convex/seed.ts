@@ -79,12 +79,21 @@ const KB = [
   { slug: "client-discovery-call-script", title: "Discovery Call — Script & probe questions", category: "Strategi" as const, summary: "Script 30 menit untuk discovery call. 4 fase: rapport, situation probe, need probe, next-step framing.", body: para("Discovery call gratis 30 menit yang ditawarkan di /services adalah filter, bukan sales pitch. Tujuan: assess fit + decide apakah lanjut proposal atau decline halus.", "Fase 1 rapport (3 menit), Fase 2 situation (10 menit — probe 'di mana sekarang', 'apa sudah dicoba'), Fase 3 need (10 menit — probe 'kalau ini selesai, apa berubah'), Fase 4 framing (7 menit — sketch dua-tiga opsi engagement + range pricing).", "Red flag yang biasa dropping deal: klien minta 'gambaran solusi' detail di call. Itu sinyal mereka cari free advice, bukan partner. Politely defer ke proposal berbayar."), author: "Lorem Konsultan", updatedAt: day(1), status: "draft" as const },
 ];
 
+// Keep in sync with components/templates/konsultan/shared/seed.ts
+// SEED_LANDING_SECTIONS. `syncLanding` below pushes additions/order to an
+// already-seeded deployment without touching admin-edited copy.
 const LANDING = [
   { id: "ls-hero", order: 10, kind: "hero", title: "Konsultan independen, tools setara firma global.", subtitle: "Proposal AI, kontrak ID-aware, PajakAware invoicing — workspace lengkap untuk konsultan Indonesia yang serius.", enabled: true, config: '{"badge":"Boutique consulting · Indonesia"}' },
+  { id: "ls-stats", order: 15, kind: "stats", title: "Track record yang bisa diaudit", subtitle: "Angka berjalan dari engagement yang kami tangani sejak hari pertama.", enabled: true },
   { id: "ls-services", order: 20, kind: "services", title: "Empat area utama", subtitle: "Fokus di strategi, operasi, organisasi, dan workshop intensif.", enabled: true },
   { id: "ls-features", order: 30, kind: "features", title: "Tools yang menjalankan praktik kami", subtitle: "Sistem ini sama yang juga bisa Anda pakai untuk firma sendiri.", enabled: true },
   { id: "ls-portfolio", order: 40, kind: "portfolio", title: "Proyek terbaru", subtitle: "Sebagian engagement yang sedang/telah berjalan.", enabled: true },
-  { id: "ls-cta", order: 50, kind: "cta", title: "Siap mulai konsultasi?", subtitle: "Konsultasi awal gratis. Respons dalam 24 jam.", enabled: true },
+  { id: "ls-testimonials", order: 45, kind: "testimonials", title: "Apa kata klien kami", subtitle: "Dari founder, COO, sampai HR director — lintas industri dan kota.", enabled: true },
+  { id: "ls-pricing", order: 50, kind: "pricing", title: "Model engagement yang jelas", subtitle: "Mulai dari diagnostik cepat sampai retainer advisory — fixed fee, tanpa kejutan.", enabled: true },
+  { id: "ls-faq", order: 55, kind: "faq", title: "Pertanyaan sebelum engagement", subtitle: "Soal proses, durasi, biaya, dan kerahasiaan data Anda.", enabled: true },
+  { id: "ls-insights", order: 60, kind: "blog", title: "Insights dari lapangan", subtitle: "Pola yang berulang di klien kami, ditulis jadi pelajaran praktis.", enabled: true },
+  { id: "ls-cta", order: 65, kind: "cta", title: "Siap mulai konsultasi?", subtitle: "Konsultasi awal gratis. Respons dalam 24 jam.", enabled: true },
+  { id: "ls-newsletter", order: 70, kind: "newsletter", title: "Insight bulanan ke inbox Anda", subtitle: "Satu email per bulan berisi pelajaran dari engagement nyata. Tanpa spam.", enabled: true },
 ];
 
 const pubBase = "/konsultan-os";
@@ -189,6 +198,33 @@ export const run = mutation({
       for (const row of await ctx.db.query(t).take(1000)) await ctx.db.delete(row._id);
     }
     return insertAll(ctx);
+  },
+});
+
+// Additive landing sync for already-seeded deployments: inserts LANDING
+// entries whose sectionId is missing and aligns `order` to the canonical
+// lineup. Never touches admin-edited copy/enabled/config on existing rows.
+export const syncLanding = mutation({
+  args: {},
+  handler: async (ctx) => {
+    let inserted = 0;
+    let reordered = 0;
+    for (const s of LANDING) {
+      const existing = await ctx.db
+        .query("landingSections")
+        .withIndex("by_sectionId", (q) => q.eq("sectionId", s.id))
+        .unique();
+      if (!existing) {
+        await ctx.db.insert("landingSections", { sectionId: s.id, data: s });
+        inserted++;
+      } else if ((existing.data as { order?: number }).order !== s.order) {
+        await ctx.db.patch(existing._id, {
+          data: { ...(existing.data as Record<string, unknown>), order: s.order },
+        });
+        reordered++;
+      }
+    }
+    return { inserted, reordered };
   },
 });
 

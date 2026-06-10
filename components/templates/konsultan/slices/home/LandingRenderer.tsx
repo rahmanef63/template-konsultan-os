@@ -1,85 +1,46 @@
 "use client";
 
-import Autoplay from "embla-carousel-autoplay";
-import { Briefcase, FileSignature, FileText, Quote, Receipt } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import {
   HeroBlock,
   SectionHead,
   FeatureGrid,
   CtaBand,
-  type FeatureItem,
 } from "@/components/templates/_shared";
 import { LandingSectionShell } from "@/components/templates/_shared/landing/LandingSectionShell";
 import { CountUp, Stagger } from "@/components/templates/_shared/motion";
 import { parseConfigBadge } from "@/components/templates/_shared/landing/parse-config";
+import {
+  CustomSection,
+  FaqSection,
+  NewsletterSection,
+  PricingSection,
+  StatsSection,
+  TestimonialsSection,
+} from "@/components/templates/_shared/landing/sections";
 import type { LandingSection } from "@/components/templates/_shared/landing/types";
 import { ADMIN_BASE, PUBLIC_BASE } from "../../shared/nav-config";
 import type { Project } from "../../shared/types";
+import {
+  FEATURE_ITEMS,
+  InsightsTeaser,
+  KONSULTAN_CLIENTS,
+  KONSULTAN_FAQS,
+  KONSULTAN_STATS,
+  KONSULTAN_TESTIMONIALS,
+  KONSULTAN_TIERS,
+  SERVICE_ITEMS,
+} from "./LandingExtras";
 
 interface Deps {
   projects: Project[];
 }
 
-const SERVICE_ITEMS: FeatureItem[] = [
-  { title: "Strategi & GTM", blurb: "Roadmap go-to-market, ICP definition, pricing strategy untuk launch baru." },
-  { title: "Operations Audit", blurb: "Lean operations audit + quick-wins implementable dalam 8 minggu." },
-  { title: "Org Design & Hiring", blurb: "Career ladder, interview rubric, onboarding system untuk scaling tim." },
-  { title: "Workshop & Mentoring", blurb: "Intensive workshop fasilitasi + mentoring untuk leadership team." },
-];
-
-const FEATURE_ITEMS: FeatureItem[] = [
-  { icon: FileText, title: "Proposal AI", blurb: "Generate proposal dari brief 1 paragraf — siap dipresentasikan." },
-  { icon: FileSignature, title: "Kontrak ID-aware", blurb: "Template kontrak sesuai hukum Indonesia — bilingual." },
-  { icon: Receipt, title: "PajakAware Invoice", blurb: "Auto PPN 11%, e-Faktur compatible, reminder otomatis." },
-  { icon: Briefcase, title: "Project Tracking", blurb: "Status proyek live + progress milestone untuk klien." },
-];
-
-const TESTIMONIAL_ITEMS = [
-  {
-    quote:
-      "Roadmap GTM dari tim ini langsung kami eksekusi minggu berikutnya. Tidak ada slide pemanis — semua actionable.",
-    author: "Dewi Lestari",
-    role: "CEO, retail F&B — Jakarta",
-  },
-  {
-    quote:
-      "Operations audit 8 minggu memangkas lead time produksi 30%. Quick-wins-nya benar-benar quick.",
-    author: "Bayu Pratama",
-    role: "COO, manufaktur — Bekasi",
-  },
-  {
-    quote:
-      "Career ladder + interview rubric mereka jadi standar hiring kami sampai sekarang.",
-    author: "Sari Wulandari",
-    role: "HR Director, SaaS — Bandung",
-  },
-  {
-    quote:
-      "Workshop leadership-nya membumi. Tim kami keluar ruangan dengan rencana 90 hari, bukan teori.",
-    author: "Andi Kurniawan",
-    role: "Founder, logistik — Surabaya",
-  },
-  {
-    quote:
-      "Proposal dan kontraknya rapi, bilingual, sadar regulasi lokal. Engagement paling mulus yang pernah kami jalani.",
-    author: "Rina Mahendra",
-    role: "GM, properti — Tangerang",
-  },
-];
-
 /**
  * Maps each enabled landingSection.kind to its konsultan renderer.
- * Admin-editable title/subtitle thread through; unknown kinds render a
- * minimal stub so admin still sees them without crashing the page.
+ * Admin-editable title/subtitle thread through; section.config JSON
+ * overrides the template defaults (see _shared/landing/sections).
  */
 export function renderLanding(section: LandingSection, deps: Deps) {
   switch (section.kind) {
@@ -95,6 +56,13 @@ export function renderLanding(section: LandingSection, deps: Deps) {
             secondaryCta={{ label: "Lihat case studies", href: `${PUBLIC_BASE}/case-studies` }}
             image={section.imageUrl ? { url: section.imageUrl, ratio: section.imageRatio } : undefined}
           />
+        </LandingSectionShell>
+      );
+
+    case "stats":
+      return (
+        <LandingSectionShell section={section} defaultClassName="border-y border-border/50 bg-muted/10">
+          <StatsSection section={section} stats={KONSULTAN_STATS} clients={KONSULTAN_CLIENTS} />
         </LandingSectionShell>
       );
 
@@ -160,41 +128,34 @@ export function renderLanding(section: LandingSection, deps: Deps) {
     case "testimonials":
       return (
         <LandingSectionShell section={section} defaultClassName="border-y border-border/50 bg-muted/10">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-            <SectionHead
-              eyebrow="Testimoni"
-              title={section.title}
-              subtitle={section.subtitle}
-            />
-            <Carousel
-              className="mt-10"
-              opts={{ align: "start", loop: TESTIMONIAL_ITEMS.length > 3 }}
-              plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]}
-            >
-              <div className="mb-4 flex items-center justify-end gap-2">
-                <CarouselPrevious />
-                <CarouselNext />
-              </div>
-              <CarouselContent>
-                {TESTIMONIAL_ITEMS.map((t) => (
-                  <CarouselItem key={t.author} className="basis-full sm:basis-1/2 lg:basis-1/3">
-                    <Card className="h-full border-border/60 bg-card/60">
-                      <CardContent className="flex h-full flex-col gap-3 p-5">
-                        <Quote className="size-4 text-muted-foreground/50" aria-hidden />
-                        <p className="flex-1 text-sm leading-relaxed text-foreground/85">
-                          &ldquo;{t.quote}&rdquo;
-                        </p>
-                        <div>
-                          <p className="text-sm font-medium leading-tight">{t.author}</p>
-                          <p className="text-xs text-muted-foreground">{t.role}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
+          <TestimonialsSection section={section} items={KONSULTAN_TESTIMONIALS} />
+        </LandingSectionShell>
+      );
+
+    case "pricing":
+      return (
+        <LandingSectionShell section={section}>
+          <PricingSection section={section} tiers={KONSULTAN_TIERS} />
+        </LandingSectionShell>
+      );
+
+    case "faq":
+      return (
+        <LandingSectionShell section={section}>
+          <FaqSection
+            section={section}
+            items={KONSULTAN_FAQS}
+            ctaLabel="Hubungi kami"
+            ctaHref={`${PUBLIC_BASE}/contact`}
+          />
+        </LandingSectionShell>
+      );
+
+    case "blog":
+    case "changelog":
+      return (
+        <LandingSectionShell section={section} defaultClassName="border-t border-border/50">
+          <InsightsTeaser section={section} />
         </LandingSectionShell>
       );
 
@@ -209,27 +170,17 @@ export function renderLanding(section: LandingSection, deps: Deps) {
         </LandingSectionShell>
       );
 
-    case "stats":
-    case "pricing":
-    case "blog":
-    case "changelog":
-    case "faq":
     case "newsletter":
+      return (
+        <LandingSectionShell section={section}>
+          <NewsletterSection section={section} placeholder="Email kerja Anda" buttonLabel="Berlangganan insight" />
+        </LandingSectionShell>
+      );
+
     case "custom":
       return (
-        <LandingSectionShell
-          section={section}
-          defaultClassName="border-b border-border/40 bg-muted/10 py-12"
-        >
-          <div className="mx-auto max-w-3xl px-6 text-center">
-            <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-              {section.kind}
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight">{section.title}</h2>
-            {section.subtitle ? (
-              <p className="mt-3 text-sm text-muted-foreground">{section.subtitle}</p>
-            ) : null}
-          </div>
+        <LandingSectionShell section={section}>
+          <CustomSection section={section} />
         </LandingSectionShell>
       );
 
@@ -237,4 +188,3 @@ export function renderLanding(section: LandingSection, deps: Deps) {
       return null;
   }
 }
-
