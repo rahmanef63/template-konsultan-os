@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Sparkles, Target, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SectionHead } from "@/components/templates/_shared/ui/section-head";
+import { Stagger } from "@/components/templates/_shared/motion";
 import { PUBLIC_BASE } from "../../shared/nav-config";
 import { SEED_SERVICES } from "../../shared/services-seed";
 import type { Service } from "../../shared/types";
@@ -32,9 +35,11 @@ export function ServicesPage() {
       />
 
       <div className="mt-12 grid gap-5 md:grid-cols-3">
-        {SEED_SERVICES.map((svc) => (
-          <ServiceCard key={svc.id} svc={svc} />
-        ))}
+        <Stagger itemClassName="h-full">
+          {SEED_SERVICES.map((svc) => (
+            <ServiceCard key={svc.id} svc={svc} />
+          ))}
+        </Stagger>
       </div>
 
       <div className="mt-20">
@@ -45,20 +50,22 @@ export function ServicesPage() {
           subtitle="Dari kontak pertama sampai kick-off — biasanya selesai dalam 2 minggu."
         />
         <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {PROCESS_STEPS.map((step, i) => (
-            <Card key={step.title} className="border-border/60 bg-card/60">
-              <CardContent className="space-y-3 p-6">
-                <div className="flex items-center gap-3">
-                  <span className="flex size-9 items-center justify-center rounded-full bg-muted/40 text-xs font-semibold">
-                    0{i + 1}
-                  </span>
-                  <step.icon className="size-4 text-muted-foreground" />
-                </div>
-                <h3 className="text-lg font-medium">{step.title}</h3>
-                <p className="text-sm text-muted-foreground">{step.text}</p>
-              </CardContent>
-            </Card>
-          ))}
+          <Stagger itemClassName="h-full">
+            {PROCESS_STEPS.map((step, i) => (
+              <Card key={step.title} className="h-full border-border/60 bg-card/60 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <CardContent className="space-y-3 p-6">
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-9 items-center justify-center rounded-full bg-muted/40 text-xs font-semibold">
+                      0{i + 1}
+                    </span>
+                    <step.icon className="size-4 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-medium">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground">{step.text}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </Stagger>
         </div>
       </div>
 
@@ -85,7 +92,7 @@ function ServiceCard({ svc }: { svc: Service }) {
   const ring = ACCENT_RING[svc.accent];
   return (
     <Card
-      className={`relative overflow-hidden border-border/60 bg-card/60 ${
+      className={`relative h-full overflow-hidden border-border/60 bg-card/60 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg ${
         svc.featured ? `ring-1 ${ring}` : ""
       }`}
     >

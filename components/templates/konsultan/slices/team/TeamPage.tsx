@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Award, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SectionHead } from "@/components/templates/_shared/ui/section-head";
+import { Stagger } from "@/components/templates/_shared/motion";
 import { PUBLIC_BASE } from "../../shared/nav-config";
 import { SEED_TEAM } from "../../shared/team-seed";
 import type { TeamMember } from "../../shared/types";
@@ -32,9 +35,11 @@ export function TeamPage() {
       />
 
       <div className="mt-12 grid gap-5 md:grid-cols-2">
-        {SEED_TEAM.map((m, i) => (
-          <MemberCard key={m.id} member={m} gradient={GRADIENTS[i % GRADIENTS.length]} />
-        ))}
+        <Stagger itemClassName="h-full">
+          {SEED_TEAM.map((m, i) => (
+            <MemberCard key={m.id} member={m} gradient={GRADIENTS[i % GRADIENTS.length]} />
+          ))}
+        </Stagger>
       </div>
 
       <div className="mt-20">
@@ -45,15 +50,17 @@ export function TeamPage() {
           subtitle="Tiga prinsip yang membentuk setiap engagement dan rekomendasi kami."
         />
         <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {VALUES.map((v) => (
-            <Card key={v.title} className="border-border/60 bg-card/60">
-              <CardContent className="space-y-2 p-6">
-                <Award className="size-5 text-muted-foreground" />
-                <h3 className="text-lg font-medium">{v.title}</h3>
-                <p className="text-sm text-muted-foreground">{v.text}</p>
-              </CardContent>
-            </Card>
-          ))}
+          <Stagger itemClassName="h-full">
+            {VALUES.map((v) => (
+              <Card key={v.title} className="h-full border-border/60 bg-card/60 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <CardContent className="space-y-2 p-6">
+                  <Award className="size-5 text-muted-foreground" />
+                  <h3 className="text-lg font-medium">{v.title}</h3>
+                  <p className="text-sm text-muted-foreground">{v.text}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </Stagger>
         </div>
       </div>
 
@@ -78,7 +85,7 @@ export function TeamPage() {
 
 function MemberCard({ member, gradient }: { member: TeamMember; gradient: string }) {
   return (
-    <Card className="overflow-hidden border-border/60 bg-card/60">
+    <Card className="h-full overflow-hidden border-border/60 bg-card/60 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg">
       <div className="grid grid-cols-[auto_1fr]">
         <div
           className={`flex items-center justify-center bg-gradient-to-br ${gradient} p-8 md:p-10`}

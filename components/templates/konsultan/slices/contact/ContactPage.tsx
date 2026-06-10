@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SectionHead } from "@/components/templates/_shared/ui/section-head";
+import { Stagger } from "@/components/templates/_shared/motion";
 import { DEFAULT_SITE_CONFIG } from "../../shared/site-config";
 
 export function ContactPage() {
@@ -19,7 +20,8 @@ export function ContactPage() {
       />
 
       <div className="grid gap-6 md:grid-cols-[2fr_1fr]">
-        <Card className="border-border/60 bg-card/60">
+        <Stagger itemClassName="h-full">
+        <Card className="h-full border-border/60 bg-card/60">
           <CardContent className="space-y-3 p-6">
             <div className="grid gap-3 md:grid-cols-2">
               <div>
@@ -53,7 +55,7 @@ export function ContactPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/60 bg-card/60">
+        <Card className="h-full border-border/60 bg-card/60">
           <CardContent className="space-y-4 p-6 text-sm">
             <div className="flex items-start gap-3">
               <Mail className="mt-0.5 size-4 text-muted-foreground" />
@@ -78,6 +80,7 @@ export function ContactPage() {
             </div>
           </CardContent>
         </Card>
+        </Stagger>
       </div>
     </section>
   );

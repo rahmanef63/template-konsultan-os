@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUpRight, Calendar, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { SectionHead } from "@/components/templates/_shared/ui/section-head";
+import { Reveal, Stagger } from "@/components/templates/_shared/motion";
 import { fmtDate } from "@/components/templates/_shared/utils";
 import { PUBLIC_BASE } from "../../shared/nav-config";
 import { SEED_ARTICLES } from "../../shared/insights-seed";
@@ -28,11 +31,9 @@ export function InsightsListPage() {
         subtitle="Hasil refleksi dari engagement nyata. Sebagian besar artikel berasal dari pola yang berulang di klien kami."
       />
 
-      <Link
-        href={`${PUBLIC_BASE}/insights/${featured.slug}`}
-        className="mt-12 block"
-      >
-        <Card className="group overflow-hidden border-border/60 bg-card/60 transition-colors hover:border-foreground/30">
+      <Reveal className="mt-12">
+        <Link href={`${PUBLIC_BASE}/insights/${featured.slug}`} className="block">
+          <Card className="group overflow-hidden border-border/60 bg-card/60 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg">
           <div className="grid md:grid-cols-[1.4fr_1fr]">
             <CardContent className="space-y-4 p-8">
               <div className="flex items-center gap-2">
@@ -70,13 +71,16 @@ export function InsightsListPage() {
               </div>
             </div>
           </div>
-        </Card>
-      </Link>
+          </Card>
+        </Link>
+      </Reveal>
 
       <div className="mt-8 grid gap-5 md:grid-cols-2">
-        {rest.map((a) => (
-          <ArticleCard key={a.id} article={a} />
-        ))}
+        <Stagger itemClassName="h-full">
+          {rest.map((a) => (
+            <ArticleCard key={a.id} article={a} />
+          ))}
+        </Stagger>
       </div>
     </section>
   );
@@ -84,8 +88,8 @@ export function InsightsListPage() {
 
 function ArticleCard({ article }: { article: Article }) {
   return (
-    <Link href={`${PUBLIC_BASE}/insights/${article.slug}`} className="block">
-      <Card className="group h-full border-border/60 bg-card/60 transition-colors hover:border-foreground/30">
+    <Link href={`${PUBLIC_BASE}/insights/${article.slug}`} className="block h-full">
+      <Card className="group h-full border-border/60 bg-card/60 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg">
         <CardContent className="flex h-full flex-col gap-3 p-6">
           <Badge className={`w-fit rounded-full text-[10px] ${TAG_TONE[article.tag]}`}>
             {article.tag}

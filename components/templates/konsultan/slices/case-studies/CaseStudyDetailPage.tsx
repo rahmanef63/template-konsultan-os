@@ -15,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { CountUp, Stagger } from "@/components/templates/_shared/motion";
 import {
   fmtDate,
   slugify,
@@ -107,19 +108,21 @@ export function CaseStudyDetailPage({ slug }: { slug: string }) {
           <Briefcase className="size-5 text-muted-foreground" /> Pendekatan
         </h2>
         <div className="grid gap-3 md:grid-cols-2">
-          {PHASES.map((p, i) => (
-            <Card key={p.label} className="border-border/60 bg-card/60">
-              <CardContent className="space-y-2 p-5">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="flex size-6 items-center justify-center rounded-full bg-muted/50 text-[10px] font-semibold">
-                    {i + 1}
-                  </span>
-                  <span className="uppercase tracking-wider">{p.label}</span>
-                </div>
-                <p className="text-sm">{p.text}</p>
-              </CardContent>
-            </Card>
-          ))}
+          <Stagger itemClassName="h-full">
+            {PHASES.map((p, i) => (
+              <Card key={p.label} className="h-full border-border/60 bg-card/60 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <CardContent className="space-y-2 p-5">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="flex size-6 items-center justify-center rounded-full bg-muted/50 text-[10px] font-semibold">
+                      {i + 1}
+                    </span>
+                    <span className="uppercase tracking-wider">{p.label}</span>
+                  </div>
+                  <p className="text-sm">{p.text}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </Stagger>
         </div>
       </section>
 
@@ -132,7 +135,7 @@ export function CaseStudyDetailPage({ slug }: { slug: string }) {
           />
         </div>
         <p className="text-xs text-muted-foreground">
-          {project.progress}% complete · target selesai {fmtDate(project.endsAt)}
+          <CountUp value={project.progress} />% complete · target selesai {fmtDate(project.endsAt)}
         </p>
       </section>
 
@@ -174,18 +177,24 @@ export function CaseStudyDetailPage({ slug }: { slug: string }) {
             Case study lainnya
           </h3>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
-            {others.map((o) => (
-              <Link key={o.id} href={`${PUBLIC_BASE}/case-studies/${slugify(o.name)}`}>
-                <Card className="h-full border-border/60 bg-card/60 transition-colors hover:border-foreground/30">
-                  <CardContent className="space-y-2 p-5">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground capitalize">
-                      {o.status}
-                    </p>
-                    <h4 className="text-base font-medium leading-snug">{o.name}</h4>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+            <Stagger itemClassName="h-full">
+              {others.map((o) => (
+                <Link
+                  key={o.id}
+                  href={`${PUBLIC_BASE}/case-studies/${slugify(o.name)}`}
+                  className="block h-full"
+                >
+                  <Card className="h-full border-border/60 bg-card/60 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg">
+                    <CardContent className="space-y-2 p-5">
+                      <p className="text-xs uppercase tracking-wider text-muted-foreground capitalize">
+                        {o.status}
+                      </p>
+                      <h4 className="text-base font-medium leading-snug">{o.name}</h4>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </Stagger>
           </div>
         </section>
       )}
