@@ -54,6 +54,8 @@ export type Project = {
   endsAt: number;
   /** Icon token from the icon-picker slice (emoji | `lucide:Name` | `phosphor:Name`). */
   icon?: string;
+  /** Optional cover photo for the public case-study / portfolio card. */
+  image?: string;
 };
 
 export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue";

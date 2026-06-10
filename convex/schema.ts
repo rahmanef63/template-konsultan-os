@@ -64,6 +64,7 @@ export default defineSchema({
     startedAt: v.number(),
     endsAt: v.number(),
     icon: v.optional(v.string()),
+    image: v.optional(v.string()),
   }).index("by_status", ["status"]),
 
   konsultanInvoices: defineTable({

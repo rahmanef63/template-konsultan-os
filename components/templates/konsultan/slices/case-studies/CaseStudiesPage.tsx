@@ -32,7 +32,21 @@ export function CaseStudiesPage() {
                 href={`${PUBLIC_BASE}/case-studies/${slugify(p.name)}`}
                 className="block h-full"
               >
-                <Card className="group h-full border-border/60 bg-card/60 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg">
+                <Card className="group h-full overflow-hidden border-border/60 bg-card/60 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg">
+                  {p.image ? (
+                    <div className="relative aspect-[5/3] w-full overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    </div>
+                  ) : null}
                   <CardContent className="space-y-3 p-6">
                     <div className="flex items-center gap-2">
                       <Briefcase className="size-4 text-muted-foreground" />

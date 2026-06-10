@@ -105,7 +105,21 @@ export function renderLanding(section: LandingSection, deps: Deps) {
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             <Stagger itemClassName="h-full">
               {deps.projects.map((p) => (
-                <Card key={p.id} className="h-full border-border/60 bg-card/60 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <Card key={p.id} className="h-full overflow-hidden border-border/60 bg-card/60 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  {p.image ? (
+                    <div className="relative aspect-[5/3] w-full overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    </div>
+                  ) : null}
                   <CardContent className="space-y-2 p-5">
                     <Badge variant="outline" className="rounded-full text-[10px] capitalize">
                       {p.status}

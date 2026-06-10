@@ -35,8 +35,8 @@ const CONTRACTS = [
 ];
 
 const PROJECTS = [
-  { seedId: "pr-1", contractId: "ct-1", clientId: "cl-1", name: "Lean Ops Audit — Acme", description: "Audit operasional 3 pabrik. Phase 2 dari 4.", status: "in-progress" as const, progress: 48, startedAt: day(35), endsAt: future(20) },
-  { seedId: "pr-2", contractId: "ct-2", clientId: "cl-3", name: "Engineering Org — Beta Labs", description: "Sudah delivered. Maintenance phase.", status: "delivered" as const, progress: 100, startedAt: day(105), endsAt: day(60) },
+  { seedId: "pr-1", contractId: "ct-1", clientId: "cl-1", name: "Lean Ops Audit — Acme", description: "Audit operasional 3 pabrik. Phase 2 dari 4.", status: "in-progress" as const, progress: 48, startedAt: day(35), endsAt: future(20), image: "https://picsum.photos/seed/konsultan-pr-1/800/600" },
+  { seedId: "pr-2", contractId: "ct-2", clientId: "cl-3", name: "Engineering Org — Beta Labs", description: "Sudah delivered. Maintenance phase.", status: "delivered" as const, progress: 100, startedAt: day(105), endsAt: day(60), image: "https://picsum.photos/seed/konsultan-pr-2/800/600" },
 ];
 
 const INVOICES = [
@@ -225,6 +225,27 @@ export const syncLanding = mutation({
       }
     }
     return { inserted, reordered };
+  },
+});
+
+// Additive image backfill for already-seeded deployments: matches each PROJECTS
+// seed row (which carries an `image`) to its existing konsultanProjects row by
+// the unique `name`, and patches `image` ONLY when the row has none yet. Never
+// overwrites an admin-set photo. Returns the count of rows patched.
+export const syncProjectImages = mutation({
+  args: {},
+  handler: async (ctx) => {
+    let patched = 0;
+    const rows = await ctx.db.query("konsultanProjects").take(1000);
+    for (const seed of PROJECTS) {
+      if (!seed.image) continue;
+      const row = rows.find((r) => r.name === seed.name);
+      if (row && !row.image) {
+        await ctx.db.patch(row._id, { image: seed.image });
+        patched++;
+      }
+    }
+    return { patched };
   },
 });
 
