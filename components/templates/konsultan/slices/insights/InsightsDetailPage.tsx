@@ -1,12 +1,14 @@
+"use client";
+
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { fmtDate } from "@/components/templates/_shared/utils";
 import { PUBLIC_BASE } from "../../shared/nav-config";
-import { findArticle, SEED_ARTICLES } from "../../shared/insights-seed";
+import { useKbArticles } from "../../shared/store";
+import { kbToArticle } from "../../shared/insights-seed";
 import { CommentsSection } from "../../shared/comments-section";
 
 const TAG_TONE = {
@@ -17,12 +19,25 @@ const TAG_TONE = {
 } as const;
 
 export function InsightsDetailPage({ slug }: { slug: string }) {
-  const article = findArticle(slug);
-  if (!article) notFound();
+  const kb = useKbArticles();
+  const published = kb.filter((a) => a.status === "published").map(kbToArticle);
+  const article = published.find((a) => a.slug === slug);
+  if (!article) {
+    return (
+      <article className="mx-auto max-w-3xl px-6 py-24 text-center">
+        <p className="text-sm text-muted-foreground">Artikel tidak ditemukan.</p>
+        <Button asChild variant="ghost" size="sm" className="mt-4 gap-1.5">
+          <Link href={`${PUBLIC_BASE}/insights`}>
+            <ArrowLeft className="size-3.5" /> Semua insights
+          </Link>
+        </Button>
+      </article>
+    );
+  }
 
-  const related = SEED_ARTICLES.filter(
-    (a) => a.slug !== article.slug && a.tag === article.tag,
-  ).slice(0, 2);
+  const related = published
+    .filter((a) => a.slug !== article.slug && a.tag === article.tag)
+    .slice(0, 2);
 
   return (
     <article className="mx-auto max-w-3xl px-6 py-16">

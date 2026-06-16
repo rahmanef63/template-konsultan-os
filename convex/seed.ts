@@ -80,6 +80,46 @@ const KB = [
   { slug: "client-discovery-call-script", title: "Discovery Call — Script & probe questions", category: "Strategi" as const, summary: "Script 30 menit untuk discovery call. 4 fase: rapport, situation probe, need probe, next-step framing.", body: para("Discovery call gratis 30 menit yang ditawarkan di /services adalah filter, bukan sales pitch. Tujuan: assess fit + decide apakah lanjut proposal atau decline halus.", "Fase 1 rapport (3 menit), Fase 2 situation (10 menit — probe 'di mana sekarang', 'apa sudah dicoba'), Fase 3 need (10 menit — probe 'kalau ini selesai, apa berubah'), Fase 4 framing (7 menit — sketch dua-tiga opsi engagement + range pricing).", "Red flag yang biasa dropping deal: klien minta 'gambaran solusi' detail di call. Itu sinyal mereka cari free advice, bukan partner. Politely defer ke proposal berbayar."), author: "Lorem Konsultan", updatedAt: day(1), status: "draft" as const },
 ];
 
+// Public services — mirror components/templates/konsultan/shared/services-seed.ts.
+const SERVICES = [
+  { slug: "strategy-sprint", name: "Strategy Sprint", tagline: "Diagnosa & rekomendasi strategi 6 minggu.", priceLabel: "Rp 180jt", durationLabel: "6 minggu · 2 konsultan", accent: "violet" as const, featured: true, order: 10,
+    bullets: ["Kick-off workshop dengan tim leadership", "Diagnostic interview (8–12 stakeholder)", "Market & competitor scan", "Strategic options paper (3 opsi)", "Board-ready recommendation deck"],
+    outcomes: ["Pilihan strategi yang teruji secara data", "Roadmap implementasi 12 bulan", "Konsensus internal lintas divisi"] },
+  { slug: "quarterly-retainer", name: "Quarterly Retainer", tagline: "Pendamping eksekusi strategis tiap kuartal.", priceLabel: "Rp 120jt / kuartal", durationLabel: "3 bulan · billing per kuartal", accent: "emerald" as const, order: 20,
+    bullets: ["Bi-weekly steering committee", "OKR review & coaching", "On-demand consultation (8 jam/bulan)", "Akses Slack channel ke tim konsultan", "Quarterly board memo"],
+    outcomes: ["Eksekusi strategi yang konsisten", "Tim leadership lebih percaya diri ambil keputusan", "Track record progress yang jelas"] },
+  { slug: "workshop-facilitation", name: "Workshop Facilitation", tagline: "Fasilitasi sesi intensif untuk tim leadership.", priceLabel: "Rp 45jt", durationLabel: "1–2 hari · max 20 peserta", accent: "amber" as const, order: 30,
+    bullets: ["Design workshop bersama klien", "Fasilitasi onsite (Jakarta / luar kota)", "Pre-read materials & frameworks", "Synthesis deck pasca-workshop", "Follow-up coaching 1 jam"],
+    outcomes: ["Tim selaras dalam 2 hari, bukan 2 bulan", "Output yang siap eksekusi", "Energi baru di tim leadership"] },
+];
+
+// Public team — mirror components/templates/konsultan/shared/team-seed.ts.
+const TEAM = [
+  { slug: "lorem-konsultan", name: "Lorem Konsultan", role: "Principal Consultant & Founder", city: "Jakarta", initials: "LK", yearsExp: 18, order: 10, expertise: ["Corporate Strategy", "M&A Integration", "Board Advisory"], bio: "Lorem memimpin engagement strategis untuk klien tier-1 di sektor consumer, finance, dan healthcare. Sebelum mendirikan Konsultan OS, ia menghabiskan 12 tahun di tier-1 strategy firm di Singapura dan Jakarta." },
+  { slug: "sari-widyaningsih", name: "Sari Widyaningsih", role: "Senior Manager", city: "Jakarta", initials: "SW", yearsExp: 11, order: 20, expertise: ["Organization Design", "Leadership Development", "Change Management"], bio: "Sari mendampingi tim leadership dalam transformasi organisasi pasca-merger dan ekspansi regional. Latar belakang industrial-organizational psychology dari Universitas Indonesia dan certified executive coach (ICF PCC)." },
+  { slug: "bagas-hermawan", name: "Bagas Hermawan", role: "Operations Director", city: "Surabaya", initials: "BH", yearsExp: 14, order: 30, expertise: ["Manufacturing Excellence", "Supply Chain", "Lean Six Sigma"], bio: "Bagas memimpin praktik operasi dengan fokus pada manufaktur dan supply chain. Sebelumnya plant director di multinasional FMCG, dan certified Lean Six Sigma Black Belt." },
+  { slug: "rizki-pratama", name: "Rizki Pratama", role: "Engagement Manager", city: "Bandung", initials: "RP", yearsExp: 8, order: 40, expertise: ["Digital Transformation", "Data Strategy", "Product Strategy"], bio: "Rizki memimpin engagement yang melibatkan transformasi digital dan data strategy. Background computer science ITB dan pengalaman 5 tahun di product management di scale-up regional." },
+];
+
+// Public FAQ — mirror components/templates/konsultan/shared/faq-seed.ts.
+const FAQS = [
+  { category: "Umum" as const, order: 10, question: "Apa fokus utama praktik konsultasi Anda?", answer: "Kami fokus di tiga area: strategi pertumbuhan (GTM, market entry, M&A), efisiensi operasi (lean, supply chain, manufacturing), dan desain organisasi (career ladder, reorg, comp design). Skala klien: scale-up sampai mid-cap dengan revenue Rp 50 milyar–Rp 5 triliun." },
+  { category: "Umum" as const, order: 20, question: "Industri apa saja yang pernah dikerjakan?", answer: "Mayoritas engagement di manufaktur (otomotif, FMCG, F&B), teknologi (SaaS B2B, marketplace), jasa keuangan (multifinance, fintech), dan retail/distribusi. Kami tidak menerima engagement di tobacco, gambling, atau ekstraktif tanpa pre-screening ESG." },
+  { category: "Umum" as const, order: 30, question: "Apakah bahasa kerja Indonesia atau Inggris?", answer: "Bilingual — default Bahasa Indonesia untuk klien lokal, English untuk klien dengan stakeholder regional/global. Semua deliverable bisa dipesan bilingual (tambah ~15% durasi untuk translasi-review)." },
+  { category: "Pricing" as const, order: 40, question: "Bagaimana model pricing engagement?", answer: "Tiga model: (1) Fixed-fee per project (paling umum, untuk scope yang jelas), (2) Retainer bulanan (untuk advisory ongoing, Rp 40jt–Rp 120jt/bulan), (3) Workshop intensif (Rp 60jt–Rp 150jt per workshop 2–5 hari, all-in untuk 1 tim)." },
+  { category: "Pricing" as const, order: 50, question: "Apakah harga sudah termasuk PPN?", answer: "Harga proposal selalu pre-tax. PPN 11% ditambahkan saat invoice sesuai regulasi DJP. Kami PKP terdaftar — invoice resmi dengan e-faktur, bisa di-credit ke PPN masukan klien yang juga PKP." },
+  { category: "Pricing" as const, order: 60, question: "Term pembayaran standar bagaimana?", answer: "Project fixed-fee: split 40/30/30 (down payment, mid-milestone, deliverable final), term net-14 per termin. Retainer: invoice di awal bulan, net-7. Workshop: 100% pre-payment minimum 5 hari kerja sebelum mulai." },
+  { category: "Pricing" as const, order: 70, question: "Apa ada discovery call gratis?", answer: "Ya. Discovery call 30 menit gratis untuk semua calon klien. Tujuan: assess fit + sketsa awal opsi engagement. Tidak ada commitment dari kedua sisi. Booking via /contact." },
+  { category: "Proses" as const, order: 80, question: "Berapa lama dari kontak pertama sampai kick-off?", answer: "Rata-rata 2 minggu: discovery call (minggu 1), proposal kirim (3–5 hari kerja), revisi & negosiasi (3–5 hari), kontrak sign (1–2 hari), kick-off (1 minggu setelah sign). Bisa di-fast-track jadi 1 minggu kalau urgent." },
+  { category: "Proses" as const, order: 90, question: "Siapa yang akan kerja di engagement saya?", answer: "Setiap engagement punya 1 principal (titik akuntabel + presence ke C-level) + 1–3 senior associate (kerja sehari-hari). Tidak ada model 'pitch dengan partner, eksekusi dengan junior' — principal selalu hands-on di analisis kunci." },
+  { category: "Proses" as const, order: 100, question: "Bagaimana laporan progress dilakukan?", answer: "Weekly memo singkat (1 halaman, async via email/WA) + bi-weekly steering committee 60 menit dengan executive sponsor. Final deliverable selalu di-walk-through live dengan tim klien, tidak di-drop file lalu hilang." },
+  { category: "Proses" as const, order: 110, question: "Bagaimana kalau scope berubah di tengah jalan?", answer: "Scope creep dihandle via Change Request (CR) tertulis singkat — kami estimate impact ke timeline & fee, klien approve sebelum kerja lanjut. Untuk perubahan kecil (<10% effort), biasanya kami absorb tanpa CR formal." },
+  { category: "Engagement" as const, order: 120, question: "Apakah Anda menandatangani NDA?", answer: "Ya, NDA standar mutual disediakan sebelum discovery call kalau diminta. Kami juga punya template NDA bilingual (ID/EN) yang biasanya bisa diterima compliance klien tanpa revisi besar. Sharing template via email." },
+  { category: "Engagement" as const, order: 130, question: "Boleh meminta klien existing sebagai referensi?", answer: "Bisa — kami minta izin ke klien existing dulu. Beberapa klien (terutama yang publik / scale-up well-known) bersedia di-quoted. Untuk industri sensitif kami biasanya share case study anonim atau referensi by-phone, bukan tertulis." },
+  { category: "Engagement" as const, order: 140, question: "Apakah engagement bisa di-pause atau dihentikan?", answer: "Bisa. Termination clause: notice 14 hari kerja dari salah satu pihak. Fee yang dibayar untuk milestone yang sudah selesai tidak refundable; milestone yang belum mulai di-refund 100%. Tidak ada penalty." },
+  { category: "Engagement" as const, order: 150, question: "Bagaimana hak intelektual deliverable diatur?", answer: "Deliverable spesifik untuk klien (analisis, rekomendasi, slide) jadi milik klien penuh setelah fee dilunasi. Tools & framework underlying (template kami, model proprietary) tetap milik kami — klien dapat license non-exclusive untuk pakai internal." },
+];
+
 // Keep in sync with components/templates/konsultan/shared/seed.ts
 // SEED_LANDING_SECTIONS. `syncLanding` below pushes additions/order to an
 // already-seeded deployment without touching admin-edited copy.
@@ -160,6 +200,9 @@ async function insertAll(ctx: any) {
   }
 
   for (const a of KB) await ctx.db.insert("konsultanKbArticles", a);
+  for (const s of SERVICES) await ctx.db.insert("konsultanServices", s);
+  for (const m of TEAM) await ctx.db.insert("konsultanTeam", m);
+  for (const f of FAQS) await ctx.db.insert("konsultanFaqs", f);
   for (const s of LANDING) await ctx.db.insert("landingSections", { sectionId: s.id, data: s });
   for (const p of PAGES) await ctx.db.insert("pages", { entryId: p.id, slug: p.slug, data: p });
 
@@ -172,6 +215,9 @@ async function insertAll(ctx: any) {
     documents: DOCUMENTS.length,
     calendarEvents: CALENDAR.length,
     kbArticles: KB.length,
+    services: SERVICES.length,
+    team: TEAM.length,
+    faqs: FAQS.length,
     landing: LANDING.length,
     pages: PAGES.length,
   };
@@ -186,6 +232,9 @@ const CONTENT_TABLES = [
   "konsultanDocuments",
   "konsultanCalendarEvents",
   "konsultanKbArticles",
+  "konsultanServices",
+  "konsultanTeam",
+  "konsultanFaqs",
   "landingSections",
   "pages",
 ] as const;

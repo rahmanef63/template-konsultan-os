@@ -1,6 +1,8 @@
 "use client";
 
 import { Mail, MapPin, Phone } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,6 +13,8 @@ import { Stagger } from "@/components/templates/_shared/motion";
 import { DEFAULT_SITE_CONFIG } from "../../shared/site-config";
 
 export function ContactPage() {
+  const settings = useQuery(api.settings.get);
+  const email = settings?.contactEmail || DEFAULT_SITE_CONFIG.email;
   return (
     <section className="mx-auto max-w-5xl px-6 py-16">
       <SectionHead
@@ -61,7 +65,7 @@ export function ContactPage() {
               <Mail className="mt-0.5 size-4 text-muted-foreground" />
               <div>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground">Email</p>
-                <p>{DEFAULT_SITE_CONFIG.email}</p>
+                <p>{email}</p>
               </div>
             </div>
             <div className="flex items-start gap-3">

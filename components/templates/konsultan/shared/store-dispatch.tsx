@@ -29,6 +29,12 @@ export function useConvexDispatch(state: State): (a: Action) => void {
   const mCalendarRemove = useMutation(api.calendar.remove);
   const mKbUpsert = useMutation(api.kb.upsert);
   const mKbRemove = useMutation(api.kb.remove);
+  const mServiceUpsert = useMutation(api.services.upsert);
+  const mServiceRemove = useMutation(api.services.remove);
+  const mTeamUpsert = useMutation(api.team.upsert);
+  const mTeamRemove = useMutation(api.team.remove);
+  const mFaqUpsert = useMutation(api.faqs.upsert);
+  const mFaqRemove = useMutation(api.faqs.remove);
   const mPageUpsert = useMutation(api.pages.upsert);
   const mPageRemove = useMutation(api.pages.remove);
   const mLandingUpsert = useMutation(api.landing.upsert);
@@ -44,6 +50,9 @@ export function useConvexDispatch(state: State): (a: Action) => void {
       documents: new Set(state.documents.map((d) => d.id)),
       calendarEvents: new Set(state.calendarEvents.map((e) => e.id)),
       kbArticles: new Set(state.kbArticles.map((a) => a.id)),
+      services: new Set(state.services.map((s) => s.id)),
+      team: new Set(state.team.map((m) => m.id)),
+      faqs: new Set(state.faqs.map((f) => f.id)),
     }),
     [state],
   );
@@ -146,6 +155,42 @@ export function useConvexDispatch(state: State): (a: Action) => void {
         }
         case "kb.delete":
           void mKbRemove({ id: action.id as Id<"konsultanKbArticles"> }).catch(fail);
+          break;
+
+        case "service.upsert": {
+          const { id, ...d } = action.service;
+          void (knownIds.services.has(id)
+            ? mServiceUpsert({ id: id as Id<"konsultanServices">, ...d })
+            : mServiceUpsert(d)
+          ).catch(fail);
+          break;
+        }
+        case "service.delete":
+          void mServiceRemove({ id: action.id as Id<"konsultanServices"> }).catch(fail);
+          break;
+
+        case "team.upsert": {
+          const { id, ...d } = action.member;
+          void (knownIds.team.has(id)
+            ? mTeamUpsert({ id: id as Id<"konsultanTeam">, ...d })
+            : mTeamUpsert(d)
+          ).catch(fail);
+          break;
+        }
+        case "team.delete":
+          void mTeamRemove({ id: action.id as Id<"konsultanTeam"> }).catch(fail);
+          break;
+
+        case "faq.upsert": {
+          const { id, ...d } = action.faq;
+          void (knownIds.faqs.has(id)
+            ? mFaqUpsert({ id: id as Id<"konsultanFaqs">, ...d })
+            : mFaqUpsert(d)
+          ).catch(fail);
+          break;
+        }
+        case "faq.delete":
+          void mFaqRemove({ id: action.id as Id<"konsultanFaqs"> }).catch(fail);
           break;
 
         case "PAGE_DELETE":

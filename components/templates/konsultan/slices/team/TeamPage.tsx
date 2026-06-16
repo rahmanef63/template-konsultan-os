@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SectionHead } from "@/components/templates/_shared/ui/section-head";
 import { Stagger } from "@/components/templates/_shared/motion";
 import { PUBLIC_BASE } from "../../shared/nav-config";
-import { SEED_TEAM } from "../../shared/team-seed";
+import { useTeam } from "../../shared/store";
 import type { TeamMember } from "../../shared/types";
 
 const GRADIENTS = [
@@ -25,6 +25,7 @@ const VALUES = [
 ];
 
 export function TeamPage() {
+  const team = [...useTeam()].sort((a, b) => a.order - b.order);
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
       <SectionHead
@@ -36,7 +37,7 @@ export function TeamPage() {
 
       <div className="mt-12 grid gap-5 md:grid-cols-2">
         <Stagger itemClassName="h-full">
-          {SEED_TEAM.map((m, i) => (
+          {team.map((m, i) => (
             <MemberCard key={m.id} member={m} gradient={GRADIENTS[i % GRADIENTS.length]} />
           ))}
         </Stagger>

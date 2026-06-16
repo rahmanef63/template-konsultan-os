@@ -1,6 +1,48 @@
 // Konsultan OS — insights/articles seed (public-only thought leadership).
+//
+// NOTE: the public /insights routes now read from the Convex-backed
+// `useKbArticles()` store (single source of truth, admin-editable). The
+// SEED_ARTICLES below are retained only so a fresh deploy with no KB rows
+// still has something to migrate — see convex/seed.ts KB inserts which carry
+// the same thought-leadership content. `kbToArticle` maps a stored KbArticle
+// into the Article shape the insights views render.
 
-import type { Article } from "./types";
+import type { Article, KbArticle } from "./types";
+
+/** Map a KB category onto the 4-tag Article taxonomy the insights UI expects. */
+function kbTagFor(category: KbArticle["category"]): Article["tag"] {
+  switch (category) {
+    case "Strategi":
+    case "M&A":
+      return "Strategi";
+    case "Operasi":
+      return "Operasi";
+    case "Organisasi":
+      return "Organisasi";
+    default:
+      return "Industri"; // Workshop / Template
+  }
+}
+
+/** Adapt a Convex KbArticle into the Article shape used by the public
+ *  insights list/detail/teaser. Body string -> paragraph array; updatedAt
+ *  doubles as publishedAt; read time estimated from word count. */
+export function kbToArticle(a: KbArticle): Article {
+  const body = a.body.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  const words = a.body.split(/\s+/).filter(Boolean).length;
+  return {
+    id: a.id,
+    slug: a.slug,
+    title: a.title,
+    excerpt: a.summary,
+    author: a.author,
+    authorRole: a.category,
+    publishedAt: a.updatedAt,
+    readMinutes: Math.max(1, Math.round(words / 180)),
+    tag: kbTagFor(a.category),
+    body: body.length ? body : [a.summary],
+  };
+}
 
 const DAY = 86_400_000;
 const NOW = 1_780_000_000_000; // stable timestamp for deterministic seed

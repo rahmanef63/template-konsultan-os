@@ -301,6 +301,12 @@ export const SEED_STATE: State = {
   documents: SEED_DOCUMENTS,
   calendarEvents: SEED_CALENDAR_EVENTS,
   kbArticles: SEED_KB_ARTICLES,
+  // services / team / faqs are Convex-only (see convex/seed.ts inserts). The
+  // legacy localStorage seed leaves them empty — the Convex-backed store reads
+  // them from konsultanServices / konsultanTeam / konsultanFaqs.
+  services: [],
+  team: [],
+  faqs: [],
   pages: SEED_PAGES,
   landingSections: SEED_LANDING_SECTIONS,
 };

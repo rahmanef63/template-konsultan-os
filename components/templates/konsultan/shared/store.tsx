@@ -39,12 +39,15 @@ function Provider({ children }: { children: React.ReactNode }) {
   const documents = useQuery(api.documents.list, {});
   const calendarEvents = useQuery(api.calendar.list, {});
   const kbArticles = useQuery(api.kb.list, {});
+  const services = useQuery(api.services.list, {});
+  const team = useQuery(api.team.list, {});
+  const faqs = useQuery(api.faqs.list, {});
   const pageRows = useQuery(api.pages.list, {});
   const landingRows = useQuery(api.landing.list, {});
 
   const queries = [
     clients, proposals, contracts, projects, invoices, documents,
-    calendarEvents, kbArticles, pageRows, landingRows,
+    calendarEvents, kbArticles, services, team, faqs, pageRows, landingRows,
   ];
   const ready = queries.every((q) => q !== undefined);
   const progress = Math.round((queries.filter((q) => q !== undefined).length / queries.length) * 100);
@@ -59,10 +62,13 @@ function Provider({ children }: { children: React.ReactNode }) {
       documents: withId(documents),
       calendarEvents: withId(calendarEvents),
       kbArticles: withId(kbArticles),
+      services: withId(services),
+      team: withId(team),
+      faqs: withId(faqs),
       pages: (pageRows ?? []) as PageEntry[],
       landingSections: (landingRows ?? []) as LandingSection[],
     }),
-    [clients, proposals, contracts, projects, invoices, documents, calendarEvents, kbArticles, pageRows, landingRows],
+    [clients, proposals, contracts, projects, invoices, documents, calendarEvents, kbArticles, services, team, faqs, pageRows, landingRows],
   );
 
   const dispatch = useConvexDispatch(state);
@@ -152,6 +158,15 @@ export function useCalendarEvents() {
 }
 export function useKbArticles() {
   return useStore().state.kbArticles;
+}
+export function useServices() {
+  return useStore().state.services;
+}
+export function useTeam() {
+  return useStore().state.team;
+}
+export function useFaqs() {
+  return useStore().state.faqs;
 }
 
 export { nid, slugify, fmtDate, rel } from "@/components/templates/_shared/utils";

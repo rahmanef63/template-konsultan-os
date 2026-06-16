@@ -8,12 +8,14 @@
  * @module
  */
 
+import type * as _shared_auth from "../_shared/auth.js";
 import type * as auth from "../auth.js";
 import type * as backup from "../backup.js";
 import type * as calendar from "../calendar.js";
 import type * as clients from "../clients.js";
 import type * as contracts from "../contracts.js";
 import type * as documents from "../documents.js";
+import type * as faqs from "../faqs.js";
 import type * as features_aiChat_action from "../features/aiChat/action.js";
 import type * as features_comments__schema from "../features/comments/_schema.js";
 import type * as features_comments_mutation from "../features/comments/mutation.js";
@@ -30,9 +32,11 @@ import type * as pages from "../pages.js";
 import type * as projects from "../projects.js";
 import type * as proposals from "../proposals.js";
 import type * as seed from "../seed.js";
+import type * as services from "../services.js";
 import type * as settings from "../settings.js";
 import type * as setup from "../setup.js";
 import type * as subscribers from "../subscribers.js";
+import type * as team from "../team.js";
 import type * as update from "../update.js";
 import type * as users from "../users.js";
 
@@ -43,12 +47,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "_shared/auth": typeof _shared_auth;
   auth: typeof auth;
   backup: typeof backup;
   calendar: typeof calendar;
   clients: typeof clients;
   contracts: typeof contracts;
   documents: typeof documents;
+  faqs: typeof faqs;
   "features/aiChat/action": typeof features_aiChat_action;
   "features/comments/_schema": typeof features_comments__schema;
   "features/comments/mutation": typeof features_comments_mutation;
@@ -65,9 +71,11 @@ declare const fullApi: ApiFromModules<{
   projects: typeof projects;
   proposals: typeof proposals;
   seed: typeof seed;
+  services: typeof services;
   settings: typeof settings;
   setup: typeof setup;
   subscribers: typeof subscribers;
+  team: typeof team;
   update: typeof update;
   users: typeof users;
 }>;

@@ -8,7 +8,8 @@ import { SectionHead } from "@/components/templates/_shared/ui/section-head";
 import { Reveal, Stagger } from "@/components/templates/_shared/motion";
 import { fmtDate } from "@/components/templates/_shared/utils";
 import { PUBLIC_BASE } from "../../shared/nav-config";
-import { SEED_ARTICLES } from "../../shared/insights-seed";
+import { useKbArticles } from "../../shared/store";
+import { kbToArticle } from "../../shared/insights-seed";
 import type { Article } from "../../shared/types";
 
 const TAG_TONE: Record<Article["tag"], string> = {
@@ -19,7 +20,11 @@ const TAG_TONE: Record<Article["tag"], string> = {
 };
 
 export function InsightsListPage() {
-  const sorted = [...SEED_ARTICLES].sort((a, b) => b.publishedAt - a.publishedAt);
+  const articles = useKbArticles();
+  const sorted = articles
+    .filter((a) => a.status === "published")
+    .map(kbToArticle)
+    .sort((a, b) => b.publishedAt - a.publishedAt);
   const [featured, ...rest] = sorted;
 
   return (
@@ -31,6 +36,12 @@ export function InsightsListPage() {
         subtitle="Hasil refleksi dari engagement nyata. Sebagian besar artikel berasal dari pola yang berulang di klien kami."
       />
 
+      {!featured ? (
+        <p className="mt-12 text-center text-sm text-muted-foreground">
+          Belum ada artikel yang dipublikasikan.
+        </p>
+      ) : (
+      <>
       <Reveal className="mt-12">
         <Link href={`${PUBLIC_BASE}/insights/${featured.slug}`} className="block">
           <Card className="group overflow-hidden border-border/60 bg-card/60 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg">
@@ -82,6 +93,8 @@ export function InsightsListPage() {
           ))}
         </Stagger>
       </div>
+      </>
+      )}
     </section>
   );
 }

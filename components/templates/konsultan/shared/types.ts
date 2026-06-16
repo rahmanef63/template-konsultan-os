@@ -94,9 +94,9 @@ export type {
   FaqCategory,
   FaqItem,
 } from "./types-az";
-import type { CalendarEvent, KbArticle } from "./types-az";
+import type { CalendarEvent, KbArticle, FaqItem } from "./types-az";
 
-/** Public-only seeds. Not in CRUD state — read directly from `public-seed.ts`. */
+/** Public productised offerings — Convex-backed CRUD (konsultanServices). */
 export type Service = {
   id: string;
   slug: string;
@@ -108,6 +108,7 @@ export type Service = {
   outcomes: string[];
   featured?: boolean;
   accent: "violet" | "amber" | "emerald" | "rose";
+  order: number;
 };
 
 export type Article = {
@@ -124,6 +125,7 @@ export type Article = {
   body: string[];
 };
 
+/** Public team / consultants — Convex-backed CRUD (konsultanTeam). */
 export type TeamMember = {
   id: string;
   slug: string;
@@ -135,6 +137,7 @@ export type TeamMember = {
   expertise: string[];
   yearsExp: number;
   linkedinUrl?: string;
+  order: number;
 };
 
 export type State = {
@@ -148,6 +151,12 @@ export type State = {
   calendarEvents: CalendarEvent[];
   /** AZ-wave: internal knowledge base / playbook articles. */
   kbArticles: KbArticle[];
+  /** Public productised services (konsultanServices). */
+  services: Service[];
+  /** Public team / consultants directory (konsultanTeam). */
+  team: TeamMember[];
+  /** Public FAQ entries (konsultanFaqs). */
+  faqs: FaqItem[];
   /** O-wave: public pages CRUD slice. */
   pages: import("@/components/templates/_shared/pages/types").PageEntry[];
   /** AB-wave: home-page section composition. Ordered + toggleable. */
@@ -177,5 +186,11 @@ export type Action =
   | { type: "calendar.delete"; id: string }
   | { type: "kb.upsert"; article: KbArticle }
   | { type: "kb.delete"; id: string }
+  | { type: "service.upsert"; service: Service }
+  | { type: "service.delete"; id: string }
+  | { type: "team.upsert"; member: TeamMember }
+  | { type: "team.delete"; id: string }
+  | { type: "faq.upsert"; faq: FaqItem }
+  | { type: "faq.delete"; id: string }
   | { type: "hydrate"; state: State }
   | { type: "reset" };

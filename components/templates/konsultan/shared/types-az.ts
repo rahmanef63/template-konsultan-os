@@ -54,4 +54,5 @@ export type FaqItem = {
   category: FaqCategory;
   question: string;
   answer: string;
+  order: number;
 };

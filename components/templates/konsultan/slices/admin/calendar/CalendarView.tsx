@@ -1,11 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { CalendarDays, Clock, MapPin } from "lucide-react";
+import { CalendarDays, Clock, ListChecks, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useStore } from "../../../shared/store";
+import { CalendarEditorView } from "./CalendarEditorView";
 import type { CalendarEvent, CalendarEventKind } from "../../../shared/types";
 
 const DAYS = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
@@ -33,6 +35,7 @@ function fmtHour(h: number): string {
 
 export function CalendarView() {
   const { state } = useStore();
+  const [manage, setManage] = React.useState(false);
   const events = state.calendarEvents;
   const clientMap = React.useMemo(
     () => new Map(state.clients.map((c) => [c.id, c.company])),
@@ -68,10 +71,17 @@ export function CalendarView() {
             {events.length} event terjadwal · sesi klien, deadline, workshop, internal.
           </p>
         </div>
-        <Badge variant="outline" className="rounded-full">
-          {fmtHour(HOUR_START)} – {fmtHour(HOUR_END)}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="rounded-full">
+            {fmtHour(HOUR_START)} – {fmtHour(HOUR_END)}
+          </Badge>
+          <Button size="sm" variant={manage ? "default" : "outline"} className="gap-1.5" onClick={() => setManage((m) => !m)}>
+            <ListChecks className="size-3.5" /> {manage ? "Lihat grid" : "Kelola event"}
+          </Button>
+        </div>
       </div>
+
+      {manage ? <CalendarEditorView /> : (
 
       <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
         <Card className="border-border/60 bg-card/60">
@@ -163,6 +173,7 @@ export function CalendarView() {
           </CardContent>
         </Card>
       </div>
+      )}
     </div>
   );
 }

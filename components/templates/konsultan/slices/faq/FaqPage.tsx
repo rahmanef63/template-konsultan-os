@@ -15,8 +15,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SectionHead } from "@/components/templates/_shared/ui/section-head";
 import { PUBLIC_BASE } from "../../shared/nav-config";
-import { SEED_FAQ } from "../../shared/faq-seed";
-import type { FaqCategory } from "../../shared/types";
+import { useFaqs } from "../../shared/store";
+import type { FaqCategory, FaqItem } from "../../shared/types";
 
 const CATEGORIES: { value: FaqCategory; label: string; hint: string }[] = [
   { value: "Umum", label: "Umum", hint: "Tentang praktik" },
@@ -26,15 +26,16 @@ const CATEGORIES: { value: FaqCategory; label: string; hint: string }[] = [
 ];
 
 export function FaqPage() {
+  const faqs = useFaqs();
   const grouped = React.useMemo(() => {
-    const map = new Map<FaqCategory, typeof SEED_FAQ>();
+    const map = new Map<FaqCategory, FaqItem[]>();
     for (const cat of CATEGORIES) map.set(cat.value, []);
-    for (const item of SEED_FAQ) {
+    for (const item of [...faqs].sort((a, b) => a.order - b.order)) {
       const arr = map.get(item.category);
       if (arr) arr.push(item);
     }
     return map;
-  }, []);
+  }, [faqs]);
 
   return (
     <section className="mx-auto max-w-5xl px-6 py-16">
@@ -42,7 +43,7 @@ export function FaqPage() {
         align="center"
         eyebrow="FAQ"
         title="Pertanyaan yang sering ditanya"
-        subtitle={`${SEED_FAQ.length} pertanyaan — dikelompokkan jadi 4 kategori. Tidak menemukan jawaban? Tanya langsung via Contact.`}
+        subtitle={`${faqs.length} pertanyaan — dikelompokkan jadi 4 kategori. Tidak menemukan jawaban? Tanya langsung via Contact.`}
       />
 
       <Tabs defaultValue="Umum" className="mt-10">

@@ -20,7 +20,8 @@ import {
 import type { LandingSection } from "@/components/templates/_shared/landing/types";
 import { fmtDate } from "@/components/templates/_shared/utils";
 import { PUBLIC_BASE } from "../../shared/nav-config";
-import { SEED_ARTICLES } from "../../shared/insights-seed";
+import { useKbArticles } from "../../shared/store";
+import { kbToArticle } from "../../shared/insights-seed";
 import type { Article } from "../../shared/types";
 
 /** Konsultan default content for the shared landing sections — every
@@ -140,7 +141,10 @@ const TAG_TONE: Record<Article["tag"], string> = {
  *  with the same articles the /insights routes render (insights-seed). */
 export function InsightsTeaser({ section }: { section: LandingSection }) {
   const limit = cfgNumber(parseConfigObject(section.config), "limit") ?? 3;
-  const latest = [...SEED_ARTICLES]
+  const articles = useKbArticles();
+  const latest = articles
+    .filter((a) => a.status === "published")
+    .map(kbToArticle)
     .sort((a, b) => b.publishedAt - a.publishedAt)
     .slice(0, limit);
   if (latest.length === 0) return null;

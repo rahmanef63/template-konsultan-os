@@ -134,6 +134,52 @@ export default defineSchema({
     coverImage: v.optional(v.string()),
   }).index("by_slug", ["slug"]),
 
+  // Public productised offerings (services page + landing services section).
+  konsultanServices: defineTable({
+    slug: v.string(),
+    name: v.string(),
+    tagline: v.string(),
+    priceLabel: v.string(),
+    durationLabel: v.string(),
+    bullets: v.array(v.string()),
+    outcomes: v.array(v.string()),
+    featured: v.optional(v.boolean()),
+    accent: v.union(
+      v.literal("violet"),
+      v.literal("amber"),
+      v.literal("emerald"),
+      v.literal("rose"),
+    ),
+    order: v.number(),
+  }).index("by_slug", ["slug"]),
+
+  // Public team / consultants directory (team page).
+  konsultanTeam: defineTable({
+    slug: v.string(),
+    name: v.string(),
+    role: v.string(),
+    city: v.string(),
+    initials: v.string(),
+    bio: v.string(),
+    expertise: v.array(v.string()),
+    yearsExp: v.number(),
+    linkedinUrl: v.optional(v.string()),
+    order: v.number(),
+  }).index("by_slug", ["slug"]),
+
+  // Public FAQ entries (faq page + landing faq section).
+  konsultanFaqs: defineTable({
+    category: v.union(
+      v.literal("Umum"),
+      v.literal("Pricing"),
+      v.literal("Proses"),
+      v.literal("Engagement"),
+    ),
+    question: v.string(),
+    answer: v.string(),
+    order: v.number(),
+  }),
+
   subscribers: defineTable({
     email: v.string(),
     status: v.union(v.literal("pending"), v.literal("confirmed"), v.literal("unsubscribed")),

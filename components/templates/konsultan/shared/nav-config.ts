@@ -5,6 +5,7 @@ import {
   Database,
   FileSignature,
   FileText,
+  HelpCircle,
   LayoutDashboard,
   LayoutTemplate,
   LineChart,
@@ -13,6 +14,8 @@ import {
   Receipt,
   ScrollText,
   Settings,
+  Sparkles,
+  UserSquare,
   Users,
   Wand2,
 } from "lucide-react";
@@ -70,6 +73,9 @@ export function buildAdminPrimaryNav(state: State): AdminNavItem[] {
   const enabledLanding = state.landingSections.filter((s) => s.enabled).length;
   const upcomingEvents = state.calendarEvents.length;
   const publishedKb = state.kbArticles.filter((a) => a.status === "published").length;
+  const servicesCount = state.services.length;
+  const teamCount = state.team.length;
+  const faqCount = state.faqs.length;
   return [
     { id: "dashboard",  label: "Dashboard",  href: ADMIN_BASE,                   icon: LayoutDashboard, count: null },
     // "Pages" parent — collapsible group bundling every content surface
@@ -97,6 +103,9 @@ export function buildAdminPrimaryNav(state: State): AdminNavItem[] {
     { id: "billing",    label: "Billing",    href: `${ADMIN_BASE}/billing`,      icon: Receipt,         count: overdueInvoices || null },
     { id: "documents",  label: "Documents",  href: `${ADMIN_BASE}/documents`,    icon: ScrollText,      count: state.documents.length },
     { id: "knowledge-base", label: "Knowledge Base", href: `${ADMIN_BASE}/knowledge-base`, icon: BookOpen, count: publishedKb || null },
+    { id: "services",   label: "Services",   href: `${ADMIN_BASE}/services`,     icon: Sparkles,        count: servicesCount || null },
+    { id: "team",       label: "Team",       href: `${ADMIN_BASE}/team`,         icon: UserSquare,      count: teamCount || null },
+    { id: "faq",        label: "FAQ",        href: `${ADMIN_BASE}/faq`,          icon: HelpCircle,      count: faqCount || null },
     { id: "analytics",  label: "Analytics",  href: `${ADMIN_BASE}/analytics`,    icon: LineChart,       count: null },
     { id: "notes",      label: "Notes",      href: `${ADMIN_BASE}/notes`,        icon: NotebookPen,     count: null },
     { id: "database",   label: "Database",   href: `${ADMIN_BASE}/database`,     icon: Database,        count: null },

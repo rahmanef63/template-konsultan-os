@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SectionHead } from "@/components/templates/_shared/ui/section-head";
 import { Stagger } from "@/components/templates/_shared/motion";
 import { PUBLIC_BASE } from "../../shared/nav-config";
-import { SEED_SERVICES } from "../../shared/services-seed";
+import { useServices } from "../../shared/store";
 import type { Service } from "../../shared/types";
 
 const ACCENT_RING: Record<Service["accent"], string> = {
@@ -25,6 +25,7 @@ const PROCESS_STEPS = [
 ];
 
 export function ServicesPage() {
+  const services = [...useServices()].sort((a, b) => a.order - b.order);
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
       <SectionHead
@@ -36,7 +37,7 @@ export function ServicesPage() {
 
       <div className="mt-12 grid gap-5 md:grid-cols-3">
         <Stagger itemClassName="h-full">
-          {SEED_SERVICES.map((svc) => (
+          {services.map((svc) => (
             <ServiceCard key={svc.id} svc={svc} />
           ))}
         </Stagger>
@@ -92,6 +93,7 @@ function ServiceCard({ svc }: { svc: Service }) {
   const ring = ACCENT_RING[svc.accent];
   return (
     <Card
+      id={svc.slug}
       className={`relative h-full overflow-hidden border-border/60 bg-card/60 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg ${
         svc.featured ? `ring-1 ${ring}` : ""
       }`}
