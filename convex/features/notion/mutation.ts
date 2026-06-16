@@ -1,6 +1,6 @@
 import { mutation } from "../../_generated/server";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
+import { requireUser } from "../../_shared/auth";
 
 /** Upsert a notion doc (whole-document save, debounced by the host). */
 export const save = mutation({
@@ -10,8 +10,7 @@ export const save = mutation({
     data: v.any(),
   },
   handler: async (ctx, { slug, kind, data }) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+    await requireUser(ctx);
     const existing = await ctx.db
       .query("notion_docs")
       .withIndex("by_slug", (q) => q.eq("slug", slug))

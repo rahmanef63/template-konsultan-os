@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { requireUser } from "./_shared/auth";
 
 const STATUS = v.union(
   v.literal("draft"),
@@ -27,6 +28,7 @@ export const upsert = mutation({
     issuedAt: v.number(),
   },
   handler: async (ctx, { id, ...data }) => {
+    await requireUser(ctx);
     if (id) {
       await ctx.db.patch(id, data);
       return id;
@@ -38,6 +40,7 @@ export const upsert = mutation({
 export const remove = mutation({
   args: { id: v.id("konsultanInvoices") },
   handler: async (ctx, { id }) => {
+    await requireUser(ctx);
     await ctx.db.delete(id);
   },
 });
