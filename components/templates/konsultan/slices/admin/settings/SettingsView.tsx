@@ -12,17 +12,21 @@ import { SectionHead } from "@/components/templates/_shared/ui/section-head";
 import { UpdateCard } from "@/components/admin/update-card";
 import { BackupCard } from "@/components/admin/backup-card";
 import { ThemePresetSwitcher } from "@/features/theme-presets";
+import { ImagePickerButton, imageRef } from "@/features/image-picker";
 import { DEFAULT_SITE_CONFIG } from "../../../shared/site-config";
 
 export function SettingsView() {
   const c = DEFAULT_SITE_CONFIG;
   const settings = useQuery(api.settings.get);
   const upsert = useMutation(api.settings.upsert);
+  const genUploadUrl = useMutation(api.files.generateUploadUrl);
+  const getFileUrl = useMutation(api.files.getUrl);
 
   const [siteName, setSiteName] = React.useState("");
   const [ownerName, setOwnerName] = React.useState("");
   const [contactEmail, setContactEmail] = React.useState("");
   const [tagline, setTagline] = React.useState("");
+  const [logoUrl, setLogoUrl] = React.useState("");
   const [saving, setSaving] = React.useState(false);
   const hydrated = React.useRef(false);
 
@@ -33,12 +37,24 @@ export function SettingsView() {
     setOwnerName(settings?.ownerName ?? c.ownerName);
     setContactEmail(settings?.contactEmail ?? c.email);
     setTagline(settings?.tagline ?? c.tagline);
+    setLogoUrl(settings?.logoUrl ?? "");
   }, [settings, c]);
+
+  const onUpload = async (file: File): Promise<string> => {
+    const uploadUrl = await genUploadUrl();
+    const res = await fetch(uploadUrl, {
+      method: "POST",
+      headers: { "Content-Type": file.type },
+      body: file,
+    });
+    const { storageId } = (await res.json()) as { storageId: string };
+    return ((await getFileUrl({ storageId: storageId as never })) as string) ?? "";
+  };
 
   async function save() {
     setSaving(true);
     try {
-      await upsert({ siteName, ownerName, contactEmail, tagline });
+      await upsert({ siteName, ownerName, contactEmail, tagline, logoUrl });
       toast.success("Pengaturan tersimpan");
     } catch (e) {
       toast.error("Gagal menyimpan", { description: e instanceof Error ? e.message : undefined });
@@ -75,6 +91,24 @@ export function SettingsView() {
             <div className="md:col-span-2">
               <Label className="text-xs">Tagline</Label>
               <Input value={tagline} onChange={(e) => setTagline(e.target.value)} className="mt-1" />
+            </div>
+            <div className="md:col-span-2">
+              <Label className="text-xs">Logo</Label>
+              <div className="mt-1 flex items-center gap-3">
+                {logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={logoUrl} alt="Logo" className="h-9 w-auto rounded-md object-contain" />
+                ) : (
+                  <span className="text-xs text-muted-foreground">Belum ada logo — header pakai wordmark teks.</span>
+                )}
+                <ImagePickerButton
+                  label={logoUrl ? "Ganti logo" : "Upload logo"}
+                  title="Logo"
+                  onUpload={onUpload}
+                  searchUnsplash={undefined}
+                  onChange={(img) => setLogoUrl(imageRef(img) ?? "")}
+                />
+              </div>
             </div>
           </div>
           <div className="flex justify-end">
