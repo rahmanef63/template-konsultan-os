@@ -1,4 +1,4 @@
-import { ServicesPage } from "@/components/templates/konsultan/slices/services/ServicesPage";
+import { ServicesPage } from "@/features/services/ServicesPage";
 
 export default function Page() {
   return <ServicesPage />;

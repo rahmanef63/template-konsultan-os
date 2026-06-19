@@ -1,4 +1,4 @@
-import { FaqAdminView } from "@/components/templates/konsultan/slices/admin/faq/FaqAdminView";
+import { FaqAdminView } from "@/features/admin/faq/FaqAdminView";
 
 export default function Page() {
   return <FaqAdminView />;

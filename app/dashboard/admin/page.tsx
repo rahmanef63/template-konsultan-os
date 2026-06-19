@@ -1,4 +1,4 @@
-import { DashboardView } from "@/components/templates/konsultan/slices/admin/dashboard/DashboardView";
+import { DashboardView } from "@/features/admin/dashboard/DashboardView";
 import { SetupBanner } from "@/components/setup-banner";
 
 export default function Page() {

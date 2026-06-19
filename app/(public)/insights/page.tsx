@@ -1,4 +1,4 @@
-import { InsightsListPage } from "@/components/templates/konsultan/slices/insights/InsightsListPage";
+import { InsightsListPage } from "@/features/insights/InsightsListPage";
 
 export default function Page() {
   return <InsightsListPage />;

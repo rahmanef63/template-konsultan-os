@@ -1,4 +1,4 @@
-import { TeamPage } from "@/components/templates/konsultan/slices/team/TeamPage";
+import { TeamPage } from "@/features/team/TeamPage";
 
 export default function Page() {
   return <TeamPage />;

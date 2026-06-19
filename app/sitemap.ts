@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
-import { DEFAULT_SITE_CONFIG, TEMPLATE_SLUG } from "@/components/templates/konsultan/shared/site-config";
-import { buildTemplatePaths } from "@/components/templates/_shared/config/template-paths";
+import { DEFAULT_SITE_CONFIG, TEMPLATE_SLUG } from "@/features/_app/site-config";
+import { buildTemplatePaths } from "@/features/_shared/config/template-paths";
 
 const PUBLIC_BASE = buildTemplatePaths(TEMPLATE_SLUG).publicBase;
 

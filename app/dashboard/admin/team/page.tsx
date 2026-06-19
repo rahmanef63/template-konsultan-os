@@ -1,4 +1,4 @@
-import { TeamView } from "@/components/templates/konsultan/slices/admin/team/TeamView";
+import { TeamView } from "@/features/admin/team/TeamView";
 
 export default function Page() {
   return <TeamView />;
