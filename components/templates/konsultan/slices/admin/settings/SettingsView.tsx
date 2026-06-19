@@ -13,6 +13,7 @@ import { UpdateCard } from "@/components/admin/update-card";
 import { BackupCard } from "@/components/admin/backup-card";
 import { ThemePresetSwitcher } from "@/features/theme-presets";
 import { ImagePickerButton, imageRef } from "@/features/image-picker";
+import { parseSocials } from "@/components/templates/_shared/ui/site-footer";
 import { DEFAULT_SITE_CONFIG } from "../../../shared/site-config";
 
 export function SettingsView() {
@@ -27,6 +28,10 @@ export function SettingsView() {
   const [contactEmail, setContactEmail] = React.useState("");
   const [tagline, setTagline] = React.useState("");
   const [logoUrl, setLogoUrl] = React.useState("");
+  const [socialX, setSocialX] = React.useState("");
+  const [socialLinkedin, setSocialLinkedin] = React.useState("");
+  const [socialGithub, setSocialGithub] = React.useState("");
+  const [socialYoutube, setSocialYoutube] = React.useState("");
   const [saving, setSaving] = React.useState(false);
   const hydrated = React.useRef(false);
 
@@ -38,6 +43,11 @@ export function SettingsView() {
     setContactEmail(settings?.contactEmail ?? c.email);
     setTagline(settings?.tagline ?? c.tagline);
     setLogoUrl(settings?.logoUrl ?? "");
+    const sc = parseSocials(settings?.socials);
+    setSocialX(sc.x ?? "");
+    setSocialLinkedin(sc.linkedin ?? "");
+    setSocialGithub(sc.github ?? "");
+    setSocialYoutube(sc.youtube ?? "");
   }, [settings, c]);
 
   const onUpload = async (file: File): Promise<string> => {
@@ -54,7 +64,18 @@ export function SettingsView() {
   async function save() {
     setSaving(true);
     try {
-      await upsert({ siteName, ownerName, contactEmail, tagline, logoUrl });
+      const socialsMap = Object.fromEntries(
+        ([["x", socialX], ["linkedin", socialLinkedin], ["github", socialGithub], ["youtube", socialYoutube]] as const)
+          .filter(([, v]) => v.trim()),
+      );
+      await upsert({
+        siteName,
+        ownerName,
+        contactEmail,
+        tagline,
+        logoUrl,
+        socials: Object.keys(socialsMap).length ? JSON.stringify(socialsMap) : undefined,
+      });
       toast.success("Pengaturan tersimpan");
     } catch (e) {
       toast.error("Gagal menyimpan", { description: e instanceof Error ? e.message : undefined });
@@ -109,6 +130,22 @@ export function SettingsView() {
                   onChange={(img) => setLogoUrl(imageRef(img) ?? "")}
                 />
               </div>
+            </div>
+            <div>
+              <Label className="text-xs">X / Twitter URL</Label>
+              <Input value={socialX} onChange={(e) => setSocialX(e.target.value)} placeholder="https://x.com/username" className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">LinkedIn URL</Label>
+              <Input value={socialLinkedin} onChange={(e) => setSocialLinkedin(e.target.value)} placeholder="https://linkedin.com/in/username" className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">GitHub URL</Label>
+              <Input value={socialGithub} onChange={(e) => setSocialGithub(e.target.value)} placeholder="https://github.com/username" className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">YouTube URL</Label>
+              <Input value={socialYoutube} onChange={(e) => setSocialYoutube(e.target.value)} placeholder="https://youtube.com/@username" className="mt-1" />
             </div>
           </div>
           <div className="flex justify-end">
