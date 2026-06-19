@@ -26,6 +26,8 @@ export function SettingsView() {
   const [siteName, setSiteName] = React.useState("");
   const [ownerName, setOwnerName] = React.useState("");
   const [contactEmail, setContactEmail] = React.useState("");
+  const [contactPhone, setContactPhone] = React.useState("");
+  const [contactAddress, setContactAddress] = React.useState("");
   const [tagline, setTagline] = React.useState("");
   const [logoUrl, setLogoUrl] = React.useState("");
   const [socialX, setSocialX] = React.useState("");
@@ -41,6 +43,8 @@ export function SettingsView() {
     setSiteName(settings?.siteName ?? c.brandName);
     setOwnerName(settings?.ownerName ?? c.ownerName);
     setContactEmail(settings?.contactEmail ?? c.email);
+    setContactPhone(settings?.contactPhone ?? "");
+    setContactAddress(settings?.contactAddress ?? "");
     setTagline(settings?.tagline ?? c.tagline);
     setLogoUrl(settings?.logoUrl ?? "");
     const sc = parseSocials(settings?.socials);
@@ -72,6 +76,8 @@ export function SettingsView() {
         siteName,
         ownerName,
         contactEmail,
+        contactPhone: contactPhone || undefined,
+        contactAddress: contactAddress || undefined,
         tagline,
         logoUrl,
         socials: Object.keys(socialsMap).length ? JSON.stringify(socialsMap) : undefined,
@@ -108,6 +114,14 @@ export function SettingsView() {
             <div>
               <Label className="text-xs">Email</Label>
               <Input value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">Telepon / WhatsApp</Label>
+              <Input value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="+62 21-555-1234" className="mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">Alamat</Label>
+              <Input value={contactAddress} onChange={(e) => setContactAddress(e.target.value)} placeholder="SCBD Lot 3, Jakarta Selatan" className="mt-1" />
             </div>
             <div className="md:col-span-2">
               <Label className="text-xs">Tagline</Label>

@@ -15,6 +15,8 @@ import { DEFAULT_SITE_CONFIG } from "../../shared/site-config";
 export function ContactPage() {
   const settings = useQuery(api.settings.get);
   const email = settings?.contactEmail || DEFAULT_SITE_CONFIG.email;
+  const phone = settings?.contactPhone || "+62 21-555-1234";
+  const address = settings?.contactAddress || "SCBD Lot 3, Jakarta Selatan";
   return (
     <section className="mx-auto max-w-5xl px-6 py-16">
       <SectionHead
@@ -72,14 +74,14 @@ export function ContactPage() {
               <Phone className="mt-0.5 size-4 text-muted-foreground" />
               <div>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground">Telepon</p>
-                <p>+62 21-555-1234</p>
+                <p>{phone}</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <MapPin className="mt-0.5 size-4 text-muted-foreground" />
               <div>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground">Kantor</p>
-                <p>SCBD Lot 3, Jakarta Selatan</p>
+                <p>{address}</p>
               </div>
             </div>
           </CardContent>
