@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireUser } from "./_shared/auth";
+import { optionalUser, requireUser } from "./_shared/auth";
 
 const KIND = v.union(
   v.literal("deliverable"),
@@ -12,7 +12,10 @@ const STATUS = v.union(v.literal("draft"), v.literal("shared"));
 
 export const list = query({
   args: {},
-  handler: async (ctx) => ctx.db.query("konsultanDocuments").take(500),
+  handler: async (ctx) => {
+    if (!(await optionalUser(ctx))) return [];
+    return ctx.db.query("konsultanDocuments").take(500);
+  },
 });
 
 export const upsert = mutation({

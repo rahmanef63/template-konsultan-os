@@ -7,8 +7,19 @@ const STATUS = v.union(v.literal("lead"), v.literal("active"), v.literal("comple
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    if (!(await optionalUser(ctx))) return [];
-    return ctx.db.query("konsultanClients").take(500);
+    const rows = await ctx.db.query("konsultanClients").take(500);
+    if (await optionalUser(ctx)) return rows;
+    // Public case-study pages join project.clientId -> client to render
+    // company/industry/city. Expose only those public fields to anon; never
+    // email/phone/contact name/CRM status. (Cycle 1's blanket [] blanked the
+    // public case studies — this restores them without leaking PII.)
+    return rows.map((c) => ({
+      _id: c._id,
+      _creationTime: c._creationTime,
+      company: c.company,
+      industry: c.industry,
+      city: c.city,
+    }));
   },
 });
 
