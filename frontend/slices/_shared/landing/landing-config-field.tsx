@@ -15,62 +15,89 @@ import { parseConfigObject } from "./sections/config";
 // => the public renderer keeps the template defaults.
 
 type ItemField = { k: string; label: string; type?: "text" | "textarea" | "number" | "switch" | "lines" };
-type KindSchema = { key: string; singular: string; fields: ItemField[] };
+// A list schema is either object rows (`fields`) or a flat string list
+// (`stringField` => rows are plain strings, e.g. stats.clients / custom.body).
+type ListSchema =
+  | { key: string; singular: string; fields: ItemField[]; stringField?: never }
+  | { key: string; singular: string; stringField: { label: string; placeholder?: string }; fields?: never };
 
-const KIND_SCHEMA: Record<string, KindSchema> = {
-  features: {
-    key: "items",
-    singular: "Feature",
-    fields: [
-      { k: "icon", label: "Icon (lucide name)" },
-      { k: "title", label: "Title" },
-      { k: "blurb", label: "Blurb", type: "textarea" },
-    ],
-  },
-  testimonials: {
-    key: "items",
-    singular: "Testimonial",
-    fields: [
-      { k: "quote", label: "Quote", type: "textarea" },
-      { k: "author", label: "Author" },
-      { k: "role", label: "Role" },
-      { k: "rating", label: "Rating (1-5)", type: "number" },
-    ],
-  },
-  faq: {
-    key: "items",
-    singular: "Q&A",
-    fields: [
-      { k: "q", label: "Question" },
-      { k: "a", label: "Answer", type: "textarea" },
-    ],
-  },
-  pricing: {
-    key: "tiers",
-    singular: "Tier",
-    fields: [
-      { k: "name", label: "Name" },
-      { k: "price", label: "Price" },
-      { k: "period", label: "Period (e.g. /bln)" },
-      { k: "features", label: "Features (one per line)", type: "lines" },
-      { k: "featured", label: "Featured", type: "switch" },
-      { k: "ctaLabel", label: "CTA label" },
-      { k: "ctaHref", label: "CTA href" },
-    ],
-  },
-  stats: {
-    key: "stats",
-    singular: "Stat",
-    fields: [
-      { k: "value", label: "Value (number)", type: "number" },
-      { k: "prefix", label: "Prefix" },
-      { k: "suffix", label: "Suffix" },
-      { k: "label", label: "Label" },
-    ],
-  },
+const KIND_SCHEMA: Record<string, ListSchema[]> = {
+  features: [
+    {
+      key: "items",
+      singular: "Feature",
+      fields: [
+        { k: "icon", label: "Icon (lucide name)" },
+        { k: "title", label: "Title" },
+        { k: "blurb", label: "Blurb", type: "textarea" },
+      ],
+    },
+  ],
+  testimonials: [
+    {
+      key: "items",
+      singular: "Testimonial",
+      fields: [
+        { k: "quote", label: "Quote", type: "textarea" },
+        { k: "author", label: "Author" },
+        { k: "role", label: "Role" },
+        { k: "rating", label: "Rating (1-5)", type: "number" },
+      ],
+    },
+  ],
+  faq: [
+    {
+      key: "items",
+      singular: "Q&A",
+      fields: [
+        { k: "q", label: "Question" },
+        { k: "a", label: "Answer", type: "textarea" },
+      ],
+    },
+  ],
+  pricing: [
+    {
+      key: "tiers",
+      singular: "Tier",
+      fields: [
+        { k: "name", label: "Name" },
+        { k: "price", label: "Price" },
+        { k: "period", label: "Period (e.g. /bln)" },
+        { k: "features", label: "Features (one per line)", type: "lines" },
+        { k: "featured", label: "Featured", type: "switch" },
+        { k: "ctaLabel", label: "CTA label" },
+        { k: "ctaHref", label: "CTA href" },
+      ],
+    },
+  ],
+  stats: [
+    {
+      key: "stats",
+      singular: "Stat",
+      fields: [
+        { k: "value", label: "Value (number)", type: "number" },
+        { k: "prefix", label: "Prefix" },
+        { k: "suffix", label: "Suffix" },
+        { k: "label", label: "Label" },
+      ],
+    },
+    {
+      key: "clients",
+      singular: "Client",
+      stringField: { label: "Client / brand name", placeholder: "Acme Corp" },
+    },
+  ],
+  custom: [
+    {
+      key: "body",
+      singular: "Paragraph",
+      stringField: { label: "Paragraph", placeholder: "Tulis satu paragraf…" },
+    },
+  ],
 };
 
-type Row = Record<string, unknown>;
+// Object rows for the field-based lists; plain strings for stringField lists.
+type Row = Record<string, unknown> | string;
 
 export function LandingConfigField({
   config,
@@ -82,72 +109,15 @@ export function LandingConfigField({
   onChange: (next: unknown) => void;
 }) {
   const obj = parseConfigObject(config);
-  const schema = kind ? KIND_SCHEMA[kind] : undefined;
+  const lists = kind ? KIND_SCHEMA[kind] : undefined;
   const [showRaw, setShowRaw] = React.useState(false);
-
-  const rows: Row[] = schema && Array.isArray(obj[schema.key]) ? (obj[schema.key] as Row[]) : [];
-
-  function commitRows(next: Row[]) {
-    onChange(JSON.stringify({ ...obj, [schema!.key]: next }));
-  }
-  function setCell(i: number, k: string, v: unknown) {
-    commitRows(rows.map((r, idx) => (idx === i ? { ...r, [k]: v } : r)));
-  }
-  function addRow() {
-    commitRows([...rows, {}]);
-  }
-  function removeRow(i: number) {
-    commitRows(rows.filter((_, idx) => idx !== i));
-  }
-  function move(i: number, dir: -1 | 1) {
-    const j = i + dir;
-    if (j < 0 || j >= rows.length) return;
-    const next = [...rows];
-    [next[i], next[j]] = [next[j], next[i]];
-    commitRows(next);
-  }
 
   return (
     <div className="space-y-3">
-      {schema ? (
-        <div className="space-y-2">
-          {rows.length === 0 && (
-            <p className="rounded-md border border-dashed border-border/60 px-3 py-4 text-center text-xs text-muted-foreground">
-              Belum ada {schema.singular.toLowerCase()} — situs pakai contoh bawaan template. Tambah baris untuk override.
-            </p>
-          )}
-          {rows.map((row, i) => (
-            <div key={i} className="space-y-2 rounded-md border border-border/60 bg-muted/30 p-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-medium text-muted-foreground">
-                  {schema.singular} {i + 1}
-                </span>
-                <div className="flex items-center gap-1">
-                  <Button type="button" variant="ghost" size="icon" className="size-7" aria-label="Naik" onClick={() => move(i, -1)} disabled={i === 0}>
-                    <ChevronUp className="size-3.5" />
-                  </Button>
-                  <Button type="button" variant="ghost" size="icon" className="size-7" aria-label="Turun" onClick={() => move(i, 1)} disabled={i === rows.length - 1}>
-                    <ChevronDown className="size-3.5" />
-                  </Button>
-                  <Button type="button" variant="ghost" size="icon" className="size-7 text-destructive" aria-label="Hapus" onClick={() => removeRow(i)}>
-                    <Trash2 className="size-3.5" />
-                  </Button>
-                </div>
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {schema.fields.map((f) => (
-                  <div key={f.k} className={f.type === "textarea" || f.type === "lines" ? "sm:col-span-2" : ""}>
-                    <Label className="text-[10px] text-muted-foreground">{f.label}</Label>
-                    <RowCell field={f} value={row[f.k]} onChange={(v) => setCell(i, f.k, v)} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-          <Button type="button" variant="outline" size="sm" className="gap-1" onClick={addRow}>
-            <Plus className="size-3.5" /> Tambah {schema.singular.toLowerCase()}
-          </Button>
-        </div>
+      {lists ? (
+        lists.map((schema) => (
+          <ListEditor key={schema.key} obj={obj} schema={schema} onChange={onChange} />
+        ))
       ) : (
         <p className="text-[10px] text-muted-foreground">
           Section kind ini tidak punya editor terstruktur — pakai JSON di bawah.
@@ -171,6 +141,95 @@ export function LandingConfigField({
           placeholder='{ "items": [{ "q": "…", "a": "…" }] }'
         />
       )}
+    </div>
+  );
+}
+
+function ListEditor({
+  obj,
+  schema,
+  onChange,
+}: {
+  obj: Record<string, unknown>;
+  schema: ListSchema;
+  onChange: (next: unknown) => void;
+}) {
+  const isStringList = "stringField" in schema && schema.stringField !== undefined;
+  const rows: Row[] = Array.isArray(obj[schema.key]) ? (obj[schema.key] as Row[]) : [];
+
+  function commitRows(next: Row[]) {
+    onChange(JSON.stringify({ ...obj, [schema.key]: next }));
+  }
+  function setCell(i: number, k: string, v: unknown) {
+    commitRows(rows.map((r, idx) => (idx === i ? { ...(r as object), [k]: v } : r)));
+  }
+  function setString(i: number, v: string) {
+    commitRows(rows.map((r, idx) => (idx === i ? v : r)));
+  }
+  function addRow() {
+    commitRows([...rows, isStringList ? "" : {}]);
+  }
+  function removeRow(i: number) {
+    commitRows(rows.filter((_, idx) => idx !== i));
+  }
+  function move(i: number, dir: -1 | 1) {
+    const j = i + dir;
+    if (j < 0 || j >= rows.length) return;
+    const next = [...rows];
+    [next[i], next[j]] = [next[j], next[i]];
+    commitRows(next);
+  }
+
+  return (
+    <div className="space-y-2">
+      {rows.length === 0 && (
+        <p className="rounded-md border border-dashed border-border/60 px-3 py-4 text-center text-xs text-muted-foreground">
+          Belum ada {schema.singular.toLowerCase()} — situs pakai contoh bawaan template. Tambah baris untuk override.
+        </p>
+      )}
+      {rows.map((row, i) => (
+        <div key={i} className="space-y-2 rounded-md border border-border/60 bg-muted/30 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-medium text-muted-foreground">
+              {schema.singular} {i + 1}
+            </span>
+            <div className="flex items-center gap-1">
+              <Button type="button" variant="ghost" size="icon" className="size-7" aria-label="Naik" onClick={() => move(i, -1)} disabled={i === 0}>
+                <ChevronUp className="size-3.5" />
+              </Button>
+              <Button type="button" variant="ghost" size="icon" className="size-7" aria-label="Turun" onClick={() => move(i, 1)} disabled={i === rows.length - 1}>
+                <ChevronDown className="size-3.5" />
+              </Button>
+              <Button type="button" variant="ghost" size="icon" className="size-7 text-destructive" aria-label="Hapus" onClick={() => removeRow(i)}>
+                <Trash2 className="size-3.5" />
+              </Button>
+            </div>
+          </div>
+          {isStringList ? (
+            <div>
+              <Label className="text-[10px] text-muted-foreground">{schema.stringField!.label}</Label>
+              <Input
+                value={typeof row === "string" ? row : ""}
+                onChange={(e) => setString(i, e.target.value)}
+                placeholder={schema.stringField!.placeholder}
+                className="mt-1 text-xs"
+              />
+            </div>
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {schema.fields!.map((f) => (
+                <div key={f.k} className={f.type === "textarea" || f.type === "lines" ? "sm:col-span-2" : ""}>
+                  <Label className="text-[10px] text-muted-foreground">{f.label}</Label>
+                  <RowCell field={f} value={(row as Record<string, unknown>)[f.k]} onChange={(v) => setCell(i, f.k, v)} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+      <Button type="button" variant="outline" size="sm" className="gap-1" onClick={addRow}>
+        <Plus className="size-3.5" /> Tambah {schema.singular.toLowerCase()}
+      </Button>
     </div>
   );
 }
