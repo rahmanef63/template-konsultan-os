@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "convex/react";
 import { Mail, Phone, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,18 +17,19 @@ export function ContactSubmissionsView() {
   const markRead = useMutation(api.contact.markRead);
   const remove = useMutation(api.contact.remove);
 
-  async function onDelete(id: string) {
+  async function onDelete(id: Id<"konsultanContactSubmissions">) {
+    if (!confirm("Hapus pesan ini?")) return;
     try {
-      await remove({ id: id as never });
+      await remove({ id });
       toast.success("Pesan dihapus");
     } catch (e) {
       toast.error("Gagal menghapus", { description: e instanceof Error ? e.message : undefined });
     }
   }
 
-  async function onRead(id: string) {
+  async function onRead(id: Id<"konsultanContactSubmissions">) {
     try {
-      await markRead({ id: id as never });
+      await markRead({ id });
     } catch {
       /* non-fatal */
     }
