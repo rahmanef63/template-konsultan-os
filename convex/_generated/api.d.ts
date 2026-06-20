@@ -13,6 +13,7 @@ import type * as auth from "../auth.js";
 import type * as backup from "../backup.js";
 import type * as calendar from "../calendar.js";
 import type * as clients from "../clients.js";
+import type * as contact from "../contact.js";
 import type * as contracts from "../contracts.js";
 import type * as documents from "../documents.js";
 import type * as faqs from "../faqs.js";
@@ -53,6 +54,7 @@ declare const fullApi: ApiFromModules<{
   backup: typeof backup;
   calendar: typeof calendar;
   clients: typeof clients;
+  contact: typeof contact;
   contracts: typeof contracts;
   documents: typeof documents;
   faqs: typeof faqs;

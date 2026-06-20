@@ -187,6 +187,19 @@ export default defineSchema({
     ts: v.number(),
   }).index("by_email", ["email"]),
 
+  // Public contact-form submissions (contact page). Write-only inbox: the
+  // public form inserts, the dashboard reads/deletes. Mirrors `subscribers`.
+  konsultanContactSubmissions: defineTable({
+    name: v.string(),
+    company: v.optional(v.string()),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    topic: v.optional(v.string()),
+    message: v.string(),
+    status: v.union(v.literal("new"), v.literal("read")),
+    ts: v.number(),
+  }).index("by_status", ["status"]),
+
   // Page-builder + landing: complex nested structures stored as blobs keyed by
   // the frontend's string id (PageEntry.id / LandingSection.id).
   pages: defineTable({
