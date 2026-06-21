@@ -117,6 +117,39 @@ export function reducer(state: State, action: Action): State {
     case "kb.delete":
       return { ...state, kbArticles: state.kbArticles.filter((a) => a.id !== action.id) };
 
+    case "service.upsert": {
+      const idx = state.services.findIndex((s) => s.id === action.service.id);
+      const services =
+        idx >= 0
+          ? state.services.map((s) => (s.id === action.service.id ? action.service : s))
+          : [action.service, ...state.services];
+      return { ...state, services };
+    }
+    case "service.delete":
+      return { ...state, services: state.services.filter((s) => s.id !== action.id) };
+
+    case "team.upsert": {
+      const idx = state.team.findIndex((m) => m.id === action.member.id);
+      const team =
+        idx >= 0
+          ? state.team.map((m) => (m.id === action.member.id ? action.member : m))
+          : [action.member, ...state.team];
+      return { ...state, team };
+    }
+    case "team.delete":
+      return { ...state, team: state.team.filter((m) => m.id !== action.id) };
+
+    case "faq.upsert": {
+      const idx = state.faqs.findIndex((f) => f.id === action.faq.id);
+      const faqs =
+        idx >= 0
+          ? state.faqs.map((f) => (f.id === action.faq.id ? action.faq : f))
+          : [action.faq, ...state.faqs];
+      return { ...state, faqs };
+    }
+    case "faq.delete":
+      return { ...state, faqs: state.faqs.filter((f) => f.id !== action.id) };
+
     default:
       return state;
   }

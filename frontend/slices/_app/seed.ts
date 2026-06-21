@@ -10,8 +10,10 @@ export const SEED_LANDING_SECTIONS: LandingSection[] = [
     subtitle:
       "Proposal AI, kontrak ID-aware, PajakAware invoicing — workspace lengkap untuk konsultan Indonesia yang serius.",
     enabled: true,
-    bgImageUrl: "/hero.webp",
     config: '{"badge":"Boutique consulting · Indonesia"}',
+    layers: [
+      { id: "hero-photo", type: "image", placement: "background", opacity: 100, enabled: true, url: "/hero.webp" },
+    ],
   },
   {
     id: "ls-stats",

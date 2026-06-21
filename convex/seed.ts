@@ -124,7 +124,7 @@ const FAQS = [
 // SEED_LANDING_SECTIONS. `syncLanding` below pushes additions/order to an
 // already-seeded deployment without touching admin-edited copy.
 const LANDING = [
-  { id: "ls-hero", order: 10, kind: "hero", title: "Konsultan independen, tools setara firma global.", subtitle: "Proposal AI, kontrak ID-aware, PajakAware invoicing — workspace lengkap untuk konsultan Indonesia yang serius.", enabled: true, bgImageUrl: "/hero.webp", config: '{"badge":"Boutique consulting · Indonesia"}' },
+  { id: "ls-hero", order: 10, kind: "hero", title: "Konsultan independen, tools setara firma global.", subtitle: "Proposal AI, kontrak ID-aware, PajakAware invoicing — workspace lengkap untuk konsultan Indonesia yang serius.", enabled: true, config: '{"badge":"Boutique consulting · Indonesia"}', layers: [{ id: "hero-photo", type: "image", placement: "background", opacity: 100, enabled: true, url: "/hero.webp" }] },
   { id: "ls-stats", order: 15, kind: "stats", title: "Track record yang bisa diaudit", subtitle: "Angka berjalan dari engagement yang kami tangani sejak hari pertama.", enabled: true },
   { id: "ls-services", order: 20, kind: "services", title: "Empat area utama", subtitle: "Fokus di strategi, operasi, organisasi, dan workshop intensif.", enabled: true },
   { id: "ls-features", order: 30, kind: "features", title: "Tools yang menjalankan praktik kami", subtitle: "Sistem ini sama yang juga bisa Anda pakai untuk firma sendiri.", enabled: true },

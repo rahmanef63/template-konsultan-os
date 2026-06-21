@@ -9,6 +9,7 @@ import {
   CtaBand,
 } from "@/features/_shared";
 import { LandingSectionShell } from "@/features/_shared/landing/LandingSectionShell";
+import { HeroLayers } from "@/features/_shared/landing/HeroLayers";
 import { CountUp, Stagger } from "@/features/_shared/motion";
 import { parseConfigBadge } from "@/features/_shared/landing/parse-config";
 import {
@@ -48,15 +49,23 @@ export function renderLanding(section: LandingSection, deps: Deps) {
     case "hero":
       return (
         <LandingSectionShell section={section}>
-          <HeroBlock
-            glow
-            badge={parseConfigBadge(section.config) ?? "Boutique consulting · Indonesia"}
-            title={section.title}
-            subtitle={section.subtitle}
-            primaryCta={{ label: "Konsultasi gratis", href: `${PUBLIC_BASE}/contact` }}
-            secondaryCta={{ label: "Lihat case studies", href: `${PUBLIC_BASE}/case-studies` }}
-            image={section.imageUrl ? { url: section.imageUrl, ratio: section.imageRatio } : undefined}
-          />
+          {/* Admin-composed background / foreground layers wrap the shared
+              HeroBlock. The glow blobs (the wash that hides the image) are
+              gated on `shade` so by default the layer image shows in full
+              real color. */}
+          <div className="relative isolate overflow-hidden">
+            <HeroLayers placement="background" layers={section.layers} />
+            <HeroBlock
+              glow={Boolean(section.shade)}
+              badge={parseConfigBadge(section.config) ?? "Boutique consulting · Indonesia"}
+              title={section.title}
+              subtitle={section.subtitle}
+              primaryCta={{ label: "Konsultasi gratis", href: `${PUBLIC_BASE}/contact` }}
+              secondaryCta={{ label: "Lihat case studies", href: `${PUBLIC_BASE}/case-studies` }}
+              image={section.imageUrl ? { url: section.imageUrl, ratio: section.imageRatio } : undefined}
+            />
+            <HeroLayers placement="foreground" layers={section.layers} />
+          </div>
         </LandingSectionShell>
       );
 
