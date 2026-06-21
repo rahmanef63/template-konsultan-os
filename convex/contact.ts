@@ -22,18 +22,18 @@ export const submit = mutation({
     message: v.string(),
   },
   handler: async (ctx, args) => {
-    const name = args.name.trim();
-    const email = args.email.trim();
-    const message = args.message.trim();
+    const name = args.name.trim().slice(0, 200);
+    const email = args.email.trim().slice(0, 320);
+    const message = args.message.trim().slice(0, 5000);
     if (!name) throw new Error("Nama wajib diisi");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Email tidak valid");
     if (!message) throw new Error("Detail tantangan wajib diisi");
     return await ctx.db.insert("konsultanContactSubmissions", {
       name,
-      company: args.company?.trim() || undefined,
+      company: args.company?.trim().slice(0, 200) || undefined,
       email,
-      phone: args.phone?.trim() || undefined,
-      topic: args.topic?.trim() || undefined,
+      phone: args.phone?.trim().slice(0, 50) || undefined,
+      topic: args.topic?.trim().slice(0, 500) || undefined,
       message,
       status: "new",
       ts: Date.now(),
