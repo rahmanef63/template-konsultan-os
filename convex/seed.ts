@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import { ConvexError } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireUser } from "./_shared/auth";
@@ -124,7 +124,7 @@ const FAQS = [
 // SEED_LANDING_SECTIONS. `syncLanding` below pushes additions/order to an
 // already-seeded deployment without touching admin-edited copy.
 const LANDING = [
-  { id: "ls-hero", order: 10, kind: "hero", title: "Konsultan independen, tools setara firma global.", subtitle: "Proposal AI, kontrak ID-aware, PajakAware invoicing — workspace lengkap untuk konsultan Indonesia yang serius.", enabled: true, config: '{"badge":"Boutique consulting · Indonesia"}' },
+  { id: "ls-hero", order: 10, kind: "hero", title: "Konsultan independen, tools setara firma global.", subtitle: "Proposal AI, kontrak ID-aware, PajakAware invoicing — workspace lengkap untuk konsultan Indonesia yang serius.", enabled: true, imageUrl: "/hero.webp", config: '{"badge":"Boutique consulting · Indonesia"}' },
   { id: "ls-stats", order: 15, kind: "stats", title: "Track record yang bisa diaudit", subtitle: "Angka berjalan dari engagement yang kami tangani sejak hari pertama.", enabled: true },
   { id: "ls-services", order: 20, kind: "services", title: "Empat area utama", subtitle: "Fokus di strategi, operasi, organisasi, dan workshop intensif.", enabled: true },
   { id: "ls-features", order: 30, kind: "features", title: "Tools yang menjalankan praktik kami", subtitle: "Sistem ini sama yang juga bisa Anda pakai untuk firma sendiri.", enabled: true },
@@ -164,7 +164,7 @@ const PAGES = [
 ];
 
 // All demo content inserts (no wipe). Shared by `run` and `seedSample`.
-async function insertAll(ctx: any) {
+async function insertAll(ctx: any, opts: { landing?: boolean } = {}) {
   const clientId = new Map<string, string>();
   for (const { seedId, ...d } of CLIENTS) clientId.set(seedId, await ctx.db.insert("konsultanClients", d));
 
@@ -203,7 +203,7 @@ async function insertAll(ctx: any) {
   for (const s of SERVICES) await ctx.db.insert("konsultanServices", s);
   for (const m of TEAM) await ctx.db.insert("konsultanTeam", m);
   for (const f of FAQS) await ctx.db.insert("konsultanFaqs", f);
-  for (const s of LANDING) await ctx.db.insert("landingSections", { sectionId: s.id, data: s });
+  if (opts.landing !== false) for (const s of LANDING) await ctx.db.insert("landingSections", { sectionId: s.id, data: s });
   for (const p of PAGES) await ctx.db.insert("pages", { entryId: p.id, slug: p.slug, data: p });
 
   return {
@@ -249,6 +249,37 @@ export const run = mutation({
       for (const row of await ctx.db.query(t).take(1000)) await ctx.db.delete(row._id);
     }
     return insertAll(ctx);
+  },
+});
+
+// Demo/CLI seed (NO auth, internal — run via `npx convex run seed:seedDemo`).
+// For SHOWCASE/demo deployments only. Refills the content tables for a full
+// demo and ensures the hero landing image, WITHOUT wiping admin-edited landing
+// copy. Idempotent.
+export const seedDemo = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    for (const t of CONTENT_TABLES) {
+      if (t === "landingSections") continue;
+      for (const row of await ctx.db.query(t).take(1000)) await ctx.db.delete(row._id);
+    }
+    const counts = await insertAll(ctx, { landing: false });
+    const hero = await ctx.db
+      .query("landingSections")
+      .withIndex("by_sectionId", (q) => q.eq("sectionId", "ls-hero"))
+      .unique();
+    let heroImage = false;
+    if (hero) {
+      const d = hero.data as Record<string, unknown>;
+      if (!d.imageUrl) {
+        await ctx.db.patch(hero._id, { data: { ...d, imageUrl: "/hero.webp" } });
+        heroImage = true;
+      }
+    } else {
+      for (const s of LANDING) await ctx.db.insert("landingSections", { sectionId: s.id, data: s });
+      heroImage = true;
+    }
+    return { ...counts, heroImage };
   },
 });
 
