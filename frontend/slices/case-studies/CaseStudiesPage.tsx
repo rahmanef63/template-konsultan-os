@@ -1,79 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowUpRight, Briefcase } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { SectionHead } from "@/features/_shared/ui/section-head";
-import { CountUp, Stagger } from "@/features/_shared/motion";
-import { fmtDate, slugify, useClients, useProjects } from "@/features/_app/store";
-import { PUBLIC_BASE } from "@/features/_app/nav-config";
+import { ConceptListPage } from "@/features/_shared/concepts/ConceptListPage";
+import { caseStudiesAdapter } from "@/features/_app/concepts";
 
 export function CaseStudiesPage() {
-  const projects = useProjects();
-  const clients = useClients();
-  const clientMap = new Map(clients.map((c) => [c.id, c]));
-
-  return (
-    <section className="mx-auto max-w-6xl px-6 py-16">
-      <SectionHead
-        eyebrow="Pengalaman"
-        title="Case Studies"
-        subtitle="Engagement yang telah dikerjakan untuk klien kami."
-      />
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Stagger itemClassName="h-full">
-          {projects.map((p) => {
-            const client = clientMap.get(p.clientId);
-            return (
-              <Link
-                key={p.id}
-                href={`${PUBLIC_BASE}/case-studies/${slugify(p.name)}`}
-                className="block h-full"
-              >
-                <Card className="group h-full overflow-hidden border-border/60 bg-card/60 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-lg">
-                  {p.image ? (
-                    <div className="relative aspect-[5/3] w-full overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={p.image}
-                        alt={p.name}
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover"
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).style.display = "none";
-                        }}
-                      />
-                    </div>
-                  ) : null}
-                  <CardContent className="space-y-3 p-6">
-                    <div className="flex items-center gap-2">
-                      <Briefcase className="size-4 text-muted-foreground" />
-                      <Badge variant="outline" className="rounded-full text-[10px]">{client?.industry ?? "—"}</Badge>
-                      <Badge variant="outline" className="rounded-full text-[10px] capitalize">{p.status}</Badge>
-                    </div>
-                    <h3 className="flex items-center gap-1 text-lg font-medium">
-                      {p.name}
-                      <ArrowUpRight className="size-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{p.description}</p>
-                    <p className="text-xs text-foreground/70">
-                      <strong>Klien:</strong> {client?.company ?? "—"} · {client?.city ?? ""}
-                    </p>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted/40">
-                      <div className="h-full bg-foreground/70" style={{ width: `${p.progress}%` }} />
-                    </div>
-                    <p className="text-[11px] text-muted-foreground">
-                      Started {fmtDate(p.startedAt)} · <CountUp value={p.progress} />% progress
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
-        </Stagger>
-      </div>
-    </section>
-  );
+  return <ConceptListPage adapter={caseStudiesAdapter} />;
 }
