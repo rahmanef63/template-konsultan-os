@@ -10,6 +10,14 @@ import { notionTables } from "./features/notion/_schema";
 // Convex-backed store adapter maps 1:1 (frontend `id` <-> Convex `_id`).
 export default defineSchema({
   ...authTables,
+
+  // Fixed-window rate-limit counters for anonymous public mutations. Additive +
+  // empty on deploy; rows reused in place per key. See convex/_shared/rateLimit.ts.
+  rateLimits: defineTable({
+    key: v.string(),
+    count: v.number(),
+    windowStart: v.number(),
+  }).index("by_key", ["key"]),
   ...commentsTables,
   ...notionTables,
 
