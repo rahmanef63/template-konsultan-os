@@ -54,7 +54,7 @@ export const SEED_ARTICLES: Article[] = [
     title: "OKR bukan KPI baru — kenapa banyak perusahaan Indonesia salah implementasi",
     excerpt:
       "OKR diadopsi karena trendy, tapi diukur seperti KPI. Hasilnya tim burnout dan target dipangkas tiap kuartal. Begini cara memperbaikinya.",
-    author: "Lorem Konsultan",
+    author: "Arif Wibowo",
     authorRole: "Principal Consultant",
     publishedAt: NOW - DAY * 3,
     readMinutes: 7,
@@ -111,7 +111,7 @@ export const SEED_ARTICLES: Article[] = [
     title: "Data governance untuk Board: empat pertanyaan yang harus dijawab CIO",
     excerpt:
       "Board Indonesia mulai peduli data governance — tapi tidak tahu harus tanya apa. Empat pertanyaan ini cukup untuk membuka percakapan substantif.",
-    author: "Lorem Konsultan",
+    author: "Arif Wibowo",
     authorRole: "Principal Consultant",
     publishedAt: NOW - DAY * 35,
     readMinutes: 5,

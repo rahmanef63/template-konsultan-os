@@ -26,9 +26,9 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   brandLetter: "K",
   brandName: "Konsultan OS",
   tagline: "Workspace konsultan Indonesia — proposal AI, kontrak ID, PajakAware invoicing.",
-  ownerName: "Lorem Konsultan",
+  ownerName: "Arif Wibowo",
   ownerRole: "principal consultant",
-  ownerInitials: "LK",
+  ownerInitials: "AW",
   description:
     "Konsultan OS — workspace untuk konsultan independen & boutique firm Indonesia. Proposal AI, kontrak ID-aware, PPN-aware invoicing.",
   baseUrl: "https://konsultan.id",

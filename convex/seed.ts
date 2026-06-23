@@ -2,6 +2,16 @@ import { mutation, internalMutation } from "./_generated/server";
 import { ConvexError } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { requireUser } from "./_shared/auth";
+import {
+  HERO,
+  STATS,
+  CLIENTS as LANDING_CLIENTS,
+  SERVICES as LANDING_SERVICES,
+  FEATURES,
+  TESTIMONIALS,
+  PRICING,
+  FAQS as LANDING_FAQS,
+} from "./landingContent";
 
 // Demo seed for Konsultan OS.
 // - `seed:run`        — CLI/power use: wipes content then inserts (npx convex run seed:run).
@@ -19,9 +29,9 @@ const day = (n: number) => now - n * 24 * 60 * 60 * 1000;
 const future = (n: number) => now + n * 24 * 60 * 60 * 1000;
 
 const CLIENTS = [
-  { seedId: "cl-1", name: "Aditya Pratama", company: "PT Acme Indonesia", industry: "Manufaktur", email: "aditya@acme.id", phone: "+62 812-1111-2222", city: "Jakarta", status: "active" as const, createdAt: day(40) },
-  { seedId: "cl-2", name: "Putri Maharani", company: "Foobar Group", industry: "F&B", email: "putri@foobar.com", phone: "+62 813-3333-4444", city: "Bandung", status: "lead" as const, createdAt: day(8) },
-  { seedId: "cl-3", name: "Bayu Setiawan", company: "Beta Labs", industry: "Technology", email: "bayu@beta.io", phone: "+62 814-5555-6666", city: "Surabaya", status: "completed" as const, createdAt: day(120) },
+  { seedId: "cl-1", name: "Aditya Pratama", company: "PT Sinar Mandiri", industry: "Manufaktur", email: "aditya@sinarmandiri.co.id", phone: "+62 812-1111-2222", city: "Jakarta", status: "active" as const, createdAt: day(40) },
+  { seedId: "cl-2", name: "Putri Maharani", company: "Nusantara Group", industry: "F&B", email: "putri@nusantaragroup.co.id", phone: "+62 813-3333-4444", city: "Bandung", status: "lead" as const, createdAt: day(8) },
+  { seedId: "cl-3", name: "Bayu Setiawan", company: "Bahtera Logistik", industry: "Technology", email: "bayu@bahteralogistik.co.id", phone: "+62 814-5555-6666", city: "Surabaya", status: "completed" as const, createdAt: day(120) },
 ];
 
 const PROPOSALS = [
@@ -36,8 +46,8 @@ const CONTRACTS = [
 ];
 
 const PROJECTS = [
-  { seedId: "pr-1", contractId: "ct-1", clientId: "cl-1", name: "Lean Ops Audit — Acme", description: "Audit operasional 3 pabrik. Phase 2 dari 4.", status: "in-progress" as const, progress: 48, startedAt: day(35), endsAt: future(20), image: "https://picsum.photos/seed/konsultan-pr-1/800/600" },
-  { seedId: "pr-2", contractId: "ct-2", clientId: "cl-3", name: "Engineering Org — Beta Labs", description: "Sudah delivered. Maintenance phase.", status: "delivered" as const, progress: 100, startedAt: day(105), endsAt: day(60), image: "https://picsum.photos/seed/konsultan-pr-2/800/600" },
+  { seedId: "pr-1", contractId: "ct-1", clientId: "cl-1", name: "Lean Ops Audit — Sinar Mandiri", description: "Audit operasional 3 pabrik. Phase 2 dari 4.", status: "in-progress" as const, progress: 48, startedAt: day(35), endsAt: future(20), image: "https://picsum.photos/seed/konsultan-pr-1/800/600" },
+  { seedId: "pr-2", contractId: "ct-2", clientId: "cl-3", name: "Engineering Org — Bahtera Logistik", description: "Sudah delivered. Maintenance phase.", status: "delivered" as const, progress: 100, startedAt: day(105), endsAt: day(60), image: "https://picsum.photos/seed/konsultan-pr-2/800/600" },
 ];
 
 const INVOICES = [
@@ -53,31 +63,31 @@ const DOCUMENTS = [
 ];
 
 const CALENDAR = [
-  { title: "Acme — Steering committee", clientId: "cl-1", projectId: "pr-1", kind: "session" as const, dayOfWeek: 1, hour: 9, durationHours: 2, location: "Zoom", notes: "Review Phase 2 progress. Bawa value-stream map terbaru." },
-  { title: "Foobar — Discovery call", clientId: "cl-2", kind: "session" as const, dayOfWeek: 1, hour: 14, durationHours: 1, location: "Zoom", notes: "Probe pain-point GTM, hint workshop format." },
+  { title: "Sinar Mandiri — Steering committee", clientId: "cl-1", projectId: "pr-1", kind: "session" as const, dayOfWeek: 1, hour: 9, durationHours: 2, location: "Zoom", notes: "Review Phase 2 progress. Bawa value-stream map terbaru." },
+  { title: "Nusantara — Discovery call", clientId: "cl-2", kind: "session" as const, dayOfWeek: 1, hour: 14, durationHours: 1, location: "Zoom", notes: "Probe pain-point GTM, hint workshop format." },
   { title: "Internal — Sprint planning", kind: "internal" as const, dayOfWeek: 2, hour: 10, durationHours: 1, location: "SCBD Office" },
-  { title: "Acme — Plant visit Bekasi", clientId: "cl-1", projectId: "pr-1", kind: "session" as const, dayOfWeek: 2, hour: 13, durationHours: 4, location: "Pabrik Bekasi", notes: "Gemba walk lini 2 & 3. Wawancara supervisor shift." },
-  { title: "Foobar — GTM Workshop Day 1", clientId: "cl-2", kind: "workshop" as const, dayOfWeek: 3, hour: 9, durationHours: 6, location: "Hotel Aryaduta Bandung" },
-  { title: "Foobar — GTM Workshop Day 2", clientId: "cl-2", kind: "workshop" as const, dayOfWeek: 4, hour: 9, durationHours: 6, location: "Hotel Aryaduta Bandung" },
+  { title: "Sinar Mandiri — Plant visit Bekasi", clientId: "cl-1", projectId: "pr-1", kind: "session" as const, dayOfWeek: 2, hour: 13, durationHours: 4, location: "Pabrik Bekasi", notes: "Gemba walk lini 2 & 3. Wawancara supervisor shift." },
+  { title: "Nusantara — GTM Workshop Day 1", clientId: "cl-2", kind: "workshop" as const, dayOfWeek: 3, hour: 9, durationHours: 6, location: "Hotel Aryaduta Bandung" },
+  { title: "Nusantara — GTM Workshop Day 2", clientId: "cl-2", kind: "workshop" as const, dayOfWeek: 4, hour: 9, durationHours: 6, location: "Hotel Aryaduta Bandung" },
   { title: "Deadline — INV-2026-002 jatuh tempo", clientId: "cl-1", kind: "deadline" as const, dayOfWeek: 4, hour: 17, durationHours: 1, location: "—" },
-  { title: "Acme — Weekly memo review", clientId: "cl-1", projectId: "pr-1", kind: "session" as const, dayOfWeek: 5, hour: 10, durationHours: 1, location: "Zoom" },
-  { title: "Beta Labs — Follow-up call", clientId: "cl-3", kind: "session" as const, dayOfWeek: 5, hour: 15, durationHours: 1, location: "Zoom", notes: "Discuss retainer extension Q3." },
+  { title: "Sinar Mandiri — Weekly memo review", clientId: "cl-1", projectId: "pr-1", kind: "session" as const, dayOfWeek: 5, hour: 10, durationHours: 1, location: "Zoom" },
+  { title: "Bahtera Logistik — Follow-up call", clientId: "cl-3", kind: "session" as const, dayOfWeek: 5, hour: 15, durationHours: 1, location: "Zoom", notes: "Discuss retainer extension Q3." },
   { title: "Internal — Knowledge base writing", kind: "internal" as const, dayOfWeek: 5, hour: 16, durationHours: 2, location: "Async" },
-  { title: "Deadline — Phase 2 deliverable Acme", clientId: "cl-1", projectId: "pr-1", kind: "deadline" as const, dayOfWeek: 1, hour: 17, durationHours: 1, location: "—" },
+  { title: "Deadline — Phase 2 deliverable Sinar Mandiri", clientId: "cl-1", projectId: "pr-1", kind: "deadline" as const, dayOfWeek: 1, hour: 17, durationHours: 1, location: "—" },
   { title: "Networking — IDX Consulting Summit", kind: "internal" as const, dayOfWeek: 6, hour: 9, durationHours: 4, location: "Ritz-Carlton Pacific Place" },
-  { title: "Foobar — Workshop debrief", clientId: "cl-2", kind: "session" as const, dayOfWeek: 0, hour: 19, durationHours: 1, location: "Zoom" },
-  { title: "Acme — Mid-week sync", clientId: "cl-1", projectId: "pr-1", kind: "session" as const, dayOfWeek: 3, hour: 16, durationHours: 1, location: "Zoom" },
+  { title: "Nusantara — Workshop debrief", clientId: "cl-2", kind: "session" as const, dayOfWeek: 0, hour: 19, durationHours: 1, location: "Zoom" },
+  { title: "Sinar Mandiri — Mid-week sync", clientId: "cl-1", projectId: "pr-1", kind: "session" as const, dayOfWeek: 3, hour: 16, durationHours: 1, location: "Zoom" },
 ];
 
 const para = (...p: string[]) => p.join("\n\n");
 const KB = [
-  { slug: "strategy-sprint-methodology", title: "Strategy Sprint — Metodologi 5 hari", category: "Strategi" as const, summary: "Format intensif untuk validasi inisiatif strategis besar dalam satu minggu kerja. Diadaptasi dari GV Sprint untuk konteks korporat ID.", body: para("Strategy Sprint adalah format kerja 5 hari yang dipakai untuk menjawab pertanyaan strategis kritis sebelum komitmen sumber daya besar. Tim klien (5–7 orang lintas-fungsi) full-time bersama 1–2 konsultan kami.", "Hari 1 framing & landscape, Hari 2 divergent ideation, Hari 3 storyboard solusi, Hari 4 prototype eksekutif (slide / financial model / mock-up), Hari 5 stress-test dengan steering committee dan keputusan go/no-go.", "Output: keputusan terdokumentasi + minimum viable plan (12 minggu). Jangan ditawarkan ke klien tanpa CEO/COO sponsor — sprint butuh decision-maker hadir minimum 4 dari 5 hari."), author: "Lorem Konsultan", updatedAt: day(5), status: "published" as const },
-  { slug: "lean-ops-audit-checklist", title: "Lean Operations Audit — Checklist 12 area", category: "Operasi" as const, summary: "Checklist baseline untuk audit operasional manufaktur. Cover 12 area dari demand planning sampai after-sales. Versi rev-7.", body: para("Checklist ini turunan dari toolkit yang dipakai di engagement Acme, Sinar Mas, dan Indofood. 12 area: demand planning, S&OP, master scheduling, MRP, supplier mgmt, inbound logistics, plant ops, quality, maintenance, warehouse, outbound, after-sales.", "Setiap area punya 8–12 pertanyaan probe + 3–5 tanda red-flag. Total ~120 pertanyaan. Selesai diisi penuh dalam 2 minggu (1 plant visit per area kluster).", "Penting: jangan share checklist ke klien sebelum kick-off. Klien yang tahu pertanyaan akan menyiapkan jawaban skripted — kita kehilangan sinyal jujur."), author: "Lorem Konsultan", updatedAt: day(2), status: "published" as const },
+  { slug: "strategy-sprint-methodology", title: "Strategy Sprint — Metodologi 5 hari", category: "Strategi" as const, summary: "Format intensif untuk validasi inisiatif strategis besar dalam satu minggu kerja. Diadaptasi dari GV Sprint untuk konteks korporat ID.", body: para("Strategy Sprint adalah format kerja 5 hari yang dipakai untuk menjawab pertanyaan strategis kritis sebelum komitmen sumber daya besar. Tim klien (5–7 orang lintas-fungsi) full-time bersama 1–2 konsultan kami.", "Hari 1 framing & landscape, Hari 2 divergent ideation, Hari 3 storyboard solusi, Hari 4 prototype eksekutif (slide / financial model / mock-up), Hari 5 stress-test dengan steering committee dan keputusan go/no-go.", "Output: keputusan terdokumentasi + minimum viable plan (12 minggu). Jangan ditawarkan ke klien tanpa CEO/COO sponsor — sprint butuh decision-maker hadir minimum 4 dari 5 hari."), author: "Arif Wibowo", updatedAt: day(5), status: "published" as const },
+  { slug: "lean-ops-audit-checklist", title: "Lean Operations Audit — Checklist 12 area", category: "Operasi" as const, summary: "Checklist baseline untuk audit operasional manufaktur. Cover 12 area dari demand planning sampai after-sales. Versi rev-7.", body: para("Checklist ini turunan dari toolkit yang dipakai di engagement Sinar Mandiri, Nusantara Group, dan Sentosa Manufaktur. 12 area: demand planning, S&OP, master scheduling, MRP, supplier mgmt, inbound logistics, plant ops, quality, maintenance, warehouse, outbound, after-sales.", "Setiap area punya 8–12 pertanyaan probe + 3–5 tanda red-flag. Total ~120 pertanyaan. Selesai diisi penuh dalam 2 minggu (1 plant visit per area kluster).", "Penting: jangan share checklist ke klien sebelum kick-off. Klien yang tahu pertanyaan akan menyiapkan jawaban skripted — kita kehilangan sinyal jujur."), author: "Arif Wibowo", updatedAt: day(2), status: "published" as const },
   { slug: "ma-due-diligence-id", title: "M&A Due Diligence — Checklist Indonesia", category: "M&A" as const, summary: "Diligence checklist yang sudah disesuaikan dengan UU PT, UU Cipta Kerja, dan praktek pajak ID. Bilingual ID/EN.", body: para("Checklist diligence standar Big-4 sering miss konteks ID: BPJS arrears, izin lingkungan (AMDAL/UKL-UPL), tanah HGB vs SHM, dan praktek transfer pricing intra-grup. Versi kami cover semua itu.", "Struktur: Legal (40 item), Finance (35), Tax (28 — fokus PPh 23/26 & PPN), HR (22), Commercial (30), IT (15), ESG (18). Total 188 item, ~3 minggu untuk perusahaan medium-size.", "Pakai bareng template Data Room Index (lihat kb-5). Klien biasanya tidak punya data room rapi — bantu mereka set up sebelum mulai diligence formal, kalau tidak timeline molor 2–4 minggu."), author: "Aditya Wibowo", updatedAt: day(18), status: "published" as const },
   { slug: "org-design-career-ladder", title: "Org Design — Career Ladder template engineering", category: "Organisasi" as const, summary: "Career ladder 7-level untuk tim engineering 10–50 orang. Format Stripe/Carta-style, diadaptasi untuk pay band rupiah.", body: para("Career ladder mendefinisikan 7 level (Junior 1 → Staff 2) dengan 4 dimensi: Technical Craft, Scope of Influence, Communication, Leadership. Setiap sel punya behavioral indicator konkret.", "Pay band terlampir (rentang gaji per level, kota Jakarta/Bandung/Surabaya). Update terakhir Q1 2026 — review band Q3 ketika data Mercer keluar.", "Jangan publikasi ladder ke klien tanpa dorong proses calibration: minimal 2 sesi 3-jam dengan tech leads untuk re-rate semua engineer existing. Tanpa kalibrasi, ladder jadi politik, bukan tool growth."), author: "Sari Putri", updatedAt: day(12), status: "published" as const },
-  { slug: "data-room-index-template", title: "Data Room Index — Template", category: "Template" as const, summary: "Folder structure standar untuk virtual data room. Cocok untuk diligence M&A, fund-raising, atau audit eksternal.", body: para("Struktur 8-folder top-level: 01 Corporate, 02 Financial, 03 Tax, 04 Legal Contracts, 05 HR & Org, 06 Commercial, 07 IT & Data, 08 ESG & Compliance. Sub-folder bernomor untuk preservasi urutan di Dropbox/Drive.", "Setiap folder punya README.md yang list expected documents. Klien tinggal isi — saat dokumen di-upload, README auto-update via Apps Script (tidak diship default; tanya saja ke ops).", "Sudah dipakai di 12 engagement. Iterasi terakhir tambah folder ESG karena bank/investor mulai minta data emisi & supplier audit."), author: "Lorem Konsultan", updatedAt: day(30), status: "published" as const },
+  { slug: "data-room-index-template", title: "Data Room Index — Template", category: "Template" as const, summary: "Folder structure standar untuk virtual data room. Cocok untuk diligence M&A, fund-raising, atau audit eksternal.", body: para("Struktur 8-folder top-level: 01 Corporate, 02 Financial, 03 Tax, 04 Legal Contracts, 05 HR & Org, 06 Commercial, 07 IT & Data, 08 ESG & Compliance. Sub-folder bernomor untuk preservasi urutan di Dropbox/Drive.", "Setiap folder punya README.md yang list expected documents. Klien tinggal isi — saat dokumen di-upload, README auto-update via Apps Script (tidak diship default; tanya saja ke ops).", "Sudah dipakai di 12 engagement. Iterasi terakhir tambah folder ESG karena bank/investor mulai minta data emisi & supplier audit."), author: "Arif Wibowo", updatedAt: day(30), status: "published" as const },
   { slug: "workshop-facilitation-playbook", title: "Workshop Facilitation — Playbook", category: "Workshop" as const, summary: "Panduan fasilitasi workshop intensif (2–5 hari). Cover agenda design, energy management, dan handling konflik eksekutif.", body: para("Workshop konsultan beda dari training. Output yang dituju: keputusan + komitmen, bukan transfer pengetahuan. Setiap sesi harus produce artifact (canvas terisi, prioritas terurut, ownership tertulis).", "Rule energy management: jangan plenary >90 menit. Break-out 4–6 orang lebih produktif. Hari ke-3 selalu paling berat — siapkan ice-breaker dan ubah seating.", "Konflik eksekutif: jangan disolve di ruangan. Park ke 1:1 follow-up. Yang penting di workshop adalah surface, bukan resolve. Resolusi private menjaga muka semua pihak."), author: "Bayu Setiawan", updatedAt: day(8), status: "published" as const },
-  { slug: "client-discovery-call-script", title: "Discovery Call — Script & probe questions", category: "Strategi" as const, summary: "Script 30 menit untuk discovery call. 4 fase: rapport, situation probe, need probe, next-step framing.", body: para("Discovery call gratis 30 menit yang ditawarkan di /services adalah filter, bukan sales pitch. Tujuan: assess fit + decide apakah lanjut proposal atau decline halus.", "Fase 1 rapport (3 menit), Fase 2 situation (10 menit — probe 'di mana sekarang', 'apa sudah dicoba'), Fase 3 need (10 menit — probe 'kalau ini selesai, apa berubah'), Fase 4 framing (7 menit — sketch dua-tiga opsi engagement + range pricing).", "Red flag yang biasa dropping deal: klien minta 'gambaran solusi' detail di call. Itu sinyal mereka cari free advice, bukan partner. Politely defer ke proposal berbayar."), author: "Lorem Konsultan", updatedAt: day(1), status: "draft" as const },
+  { slug: "client-discovery-call-script", title: "Discovery Call — Script & probe questions", category: "Strategi" as const, summary: "Script 30 menit untuk discovery call. 4 fase: rapport, situation probe, need probe, next-step framing.", body: para("Discovery call gratis 30 menit yang ditawarkan di /services adalah filter, bukan sales pitch. Tujuan: assess fit + decide apakah lanjut proposal atau decline halus.", "Fase 1 rapport (3 menit), Fase 2 situation (10 menit — probe 'di mana sekarang', 'apa sudah dicoba'), Fase 3 need (10 menit — probe 'kalau ini selesai, apa berubah'), Fase 4 framing (7 menit — sketch dua-tiga opsi engagement + range pricing).", "Red flag yang biasa dropping deal: klien minta 'gambaran solusi' detail di call. Itu sinyal mereka cari free advice, bukan partner. Politely defer ke proposal berbayar."), author: "Arif Wibowo", updatedAt: day(1), status: "draft" as const },
 ];
 
 // Public services — mirror components/templates/konsultan/shared/services-seed.ts.
@@ -95,7 +105,7 @@ const SERVICES = [
 
 // Public team — mirror components/templates/konsultan/shared/team-seed.ts.
 const TEAM = [
-  { slug: "lorem-konsultan", name: "Lorem Konsultan", role: "Principal Consultant & Founder", city: "Jakarta", initials: "LK", yearsExp: 18, order: 10, expertise: ["Corporate Strategy", "M&A Integration", "Board Advisory"], bio: "Lorem memimpin engagement strategis untuk klien tier-1 di sektor consumer, finance, dan healthcare. Sebelum mendirikan Konsultan OS, ia menghabiskan 12 tahun di tier-1 strategy firm di Singapura dan Jakarta." },
+  { slug: "arif-wibowo", name: "Arif Wibowo", role: "Principal Consultant & Founder", city: "Jakarta", initials: "AW", yearsExp: 18, order: 10, expertise: ["Corporate Strategy", "M&A Integration", "Board Advisory"], bio: "Arif memimpin engagement strategis untuk klien tier-1 di sektor consumer, finance, dan healthcare. Sebelum mendirikan Konsultan OS, ia menghabiskan 12 tahun di tier-1 strategy firm di Singapura dan Jakarta." },
   { slug: "sari-widyaningsih", name: "Sari Widyaningsih", role: "Senior Manager", city: "Jakarta", initials: "SW", yearsExp: 11, order: 20, expertise: ["Organization Design", "Leadership Development", "Change Management"], bio: "Sari mendampingi tim leadership dalam transformasi organisasi pasca-merger dan ekspansi regional. Latar belakang industrial-organizational psychology dari Universitas Indonesia dan certified executive coach (ICF PCC)." },
   { slug: "bagas-hermawan", name: "Bagas Hermawan", role: "Operations Director", city: "Surabaya", initials: "BH", yearsExp: 14, order: 30, expertise: ["Manufacturing Excellence", "Supply Chain", "Lean Six Sigma"], bio: "Bagas memimpin praktik operasi dengan fokus pada manufaktur dan supply chain. Sebelumnya plant director di multinasional FMCG, dan certified Lean Six Sigma Black Belt." },
   { slug: "rizki-pratama", name: "Rizki Pratama", role: "Engagement Manager", city: "Bandung", initials: "RP", yearsExp: 8, order: 40, expertise: ["Digital Transformation", "Data Strategy", "Product Strategy"], bio: "Rizki memimpin engagement yang melibatkan transformasi digital dan data strategy. Background computer science ITB dan pengalaman 5 tahun di product management di scale-up regional." },
@@ -123,15 +133,20 @@ const FAQS = [
 // Keep in sync with components/templates/konsultan/shared/seed.ts
 // SEED_LANDING_SECTIONS. `syncLanding` below pushes additions/order to an
 // already-seeded deployment without touching admin-edited copy.
+// Item-bearing sections (stats/services/features/testimonials/pricing/faq)
+// seed their example content into `config` from convex/landingContent.ts — the
+// SAME module the frontend render falls back to — so a fresh clone gets
+// editable example data and there is no convex<->render drift. Table-backed
+// kinds (portfolio/blog) render from their own tables and carry no config here.
 const LANDING = [
-  { id: "ls-hero", order: 10, kind: "hero", title: "Konsultan independen, tools setara firma global.", subtitle: "Proposal AI, kontrak ID-aware, PajakAware invoicing — workspace lengkap untuk konsultan Indonesia yang serius.", enabled: true, config: '{"badge":"Boutique consulting · Indonesia"}', layers: [{ id: "hero-photo", type: "image", placement: "background", opacity: 100, enabled: true, url: "/hero.webp" }] },
-  { id: "ls-stats", order: 15, kind: "stats", title: "Track record yang bisa diaudit", subtitle: "Angka berjalan dari engagement yang kami tangani sejak hari pertama.", enabled: true },
-  { id: "ls-services", order: 20, kind: "services", title: "Empat area utama", subtitle: "Fokus di strategi, operasi, organisasi, dan workshop intensif.", enabled: true },
-  { id: "ls-features", order: 30, kind: "features", title: "Tools yang menjalankan praktik kami", subtitle: "Sistem ini sama yang juga bisa Anda pakai untuk firma sendiri.", enabled: true },
+  { id: "ls-hero", order: 10, kind: "hero", title: HERO.title, subtitle: HERO.subtitle, enabled: true, config: JSON.stringify({ badge: HERO.badge }), layers: [{ id: "hero-photo", type: "image", placement: "background", opacity: 100, enabled: true, url: "/hero.webp" }] },
+  { id: "ls-stats", order: 15, kind: "stats", title: "Track record yang bisa diaudit", subtitle: "Angka berjalan dari engagement yang kami tangani sejak hari pertama.", enabled: true, config: JSON.stringify({ stats: STATS, clients: LANDING_CLIENTS }) },
+  { id: "ls-services", order: 20, kind: "services", title: "Empat area utama", subtitle: "Fokus di strategi, operasi, organisasi, dan workshop intensif.", enabled: true, config: JSON.stringify({ items: LANDING_SERVICES }) },
+  { id: "ls-features", order: 30, kind: "features", title: "Tools yang menjalankan praktik kami", subtitle: "Sistem ini sama yang juga bisa Anda pakai untuk firma sendiri.", enabled: true, config: JSON.stringify({ items: FEATURES }) },
   { id: "ls-portfolio", order: 40, kind: "portfolio", title: "Proyek terbaru", subtitle: "Sebagian engagement yang sedang/telah berjalan.", enabled: true },
-  { id: "ls-testimonials", order: 45, kind: "testimonials", title: "Apa kata klien kami", subtitle: "Dari founder, COO, sampai HR director — lintas industri dan kota.", enabled: true },
-  { id: "ls-pricing", order: 50, kind: "pricing", title: "Model engagement yang jelas", subtitle: "Mulai dari diagnostik cepat sampai retainer advisory — fixed fee, tanpa kejutan.", enabled: true },
-  { id: "ls-faq", order: 55, kind: "faq", title: "Pertanyaan sebelum engagement", subtitle: "Soal proses, durasi, biaya, dan kerahasiaan data Anda.", enabled: true },
+  { id: "ls-testimonials", order: 45, kind: "testimonials", title: "Apa kata klien kami", subtitle: "Dari founder, COO, sampai HR director — lintas industri dan kota.", enabled: true, config: JSON.stringify({ items: TESTIMONIALS }) },
+  { id: "ls-pricing", order: 50, kind: "pricing", title: "Model engagement yang jelas", subtitle: "Mulai dari diagnostik cepat sampai retainer advisory — fixed fee, tanpa kejutan.", enabled: true, config: JSON.stringify({ tiers: PRICING }) },
+  { id: "ls-faq", order: 55, kind: "faq", title: "Pertanyaan sebelum engagement", subtitle: "Soal proses, durasi, biaya, dan kerahasiaan data Anda.", enabled: true, config: JSON.stringify({ items: LANDING_FAQS }) },
   { id: "ls-insights", order: 60, kind: "blog", title: "Insights dari lapangan", subtitle: "Pola yang berulang di klien kami, ditulis jadi pelajaran praktis.", enabled: true },
   { id: "ls-cta", order: 65, kind: "cta", title: "Siap mulai konsultasi?", subtitle: "Konsultasi awal gratis. Respons dalam 24 jam.", enabled: true },
   { id: "ls-newsletter", order: 70, kind: "newsletter", title: "Insight bulanan ke inbox Anda", subtitle: "Satu email per bulan berisi pelajaran dari engagement nyata. Tanpa spam.", enabled: true },

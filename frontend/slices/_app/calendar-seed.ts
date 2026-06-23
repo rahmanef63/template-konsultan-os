@@ -7,7 +7,7 @@ import type { CalendarEvent } from "./types";
 export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   {
     id: "ev-1",
-    title: "Acme — Steering committee",
+    title: "Sinar Mandiri — Steering committee",
     clientId: "cl-1",
     projectId: "pr-1",
     kind: "session",
@@ -19,7 +19,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-2",
-    title: "Foobar — Discovery call",
+    title: "Nusantara — Discovery call",
     clientId: "cl-2",
     kind: "session",
     dayOfWeek: 1,
@@ -39,7 +39,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-4",
-    title: "Acme — Plant visit Bekasi",
+    title: "Sinar Mandiri — Plant visit Bekasi",
     clientId: "cl-1",
     projectId: "pr-1",
     kind: "session",
@@ -51,7 +51,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-5",
-    title: "Foobar — GTM Workshop Day 1",
+    title: "Nusantara — GTM Workshop Day 1",
     clientId: "cl-2",
     kind: "workshop",
     dayOfWeek: 3,
@@ -61,7 +61,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-6",
-    title: "Foobar — GTM Workshop Day 2",
+    title: "Nusantara — GTM Workshop Day 2",
     clientId: "cl-2",
     kind: "workshop",
     dayOfWeek: 4,
@@ -81,7 +81,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-8",
-    title: "Acme — Weekly memo review",
+    title: "Sinar Mandiri — Weekly memo review",
     clientId: "cl-1",
     projectId: "pr-1",
     kind: "session",
@@ -92,7 +92,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-9",
-    title: "Beta Labs — Follow-up call",
+    title: "Bahtera Logistik — Follow-up call",
     clientId: "cl-3",
     kind: "session",
     dayOfWeek: 5,
@@ -112,7 +112,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-11",
-    title: "Deadline — Phase 2 deliverable Acme",
+    title: "Deadline — Phase 2 deliverable Sinar Mandiri",
     clientId: "cl-1",
     projectId: "pr-1",
     kind: "deadline",
@@ -132,7 +132,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-13",
-    title: "Foobar — Workshop debrief",
+    title: "Nusantara — Workshop debrief",
     clientId: "cl-2",
     kind: "session",
     dayOfWeek: 0,
@@ -142,7 +142,7 @@ export const SEED_CALENDAR_EVENTS: CalendarEvent[] = [
   },
   {
     id: "ev-14",
-    title: "Acme — Mid-week sync",
+    title: "Sinar Mandiri — Mid-week sync",
     clientId: "cl-1",
     projectId: "pr-1",
     kind: "session",
