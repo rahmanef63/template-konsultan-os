@@ -22,8 +22,11 @@ export type ColumnDef<T> = {
  *
  *  `wide?: true` (text/select/number/image/position) makes the field
  *  span both columns (sm:col-span-2). textarea / tags are always wide.
- *  `hint?` renders as muted helper text below the input. */
-export type FieldDef<T> =
+ *  `hint?` renders as muted helper text below the input.
+ *  `when?` is a predicate over the live draft row — return false to hide the
+ *  field for the current values (e.g. hero-only fields on non-hero kinds). */
+type FieldWhen = { when?: (row: Record<string, unknown>) => boolean };
+export type FieldDef<T> = (
   | { kind: "text"; key: keyof T & string; label: string; mono?: boolean; placeholder?: string; hint?: string; wide?: boolean }
   | { kind: "textarea"; key: keyof T & string; label: string; rows?: number; mono?: boolean; placeholder?: string; hint?: string }
   | { kind: "number"; key: keyof T & string; label: string; min?: number; max?: number; step?: number; hint?: string; wide?: boolean }
@@ -53,7 +56,8 @@ export type FieldDef<T> =
         onChange: (v: unknown) => void,
         ctx?: { total: number; editing: boolean; row?: Record<string, unknown> },
       ) => React.ReactNode;
-    };
+    }
+) & FieldWhen;
 
 /** Adapter the template wires from its store dispatch. Generic CRUD
  *  components consume this — no direct store coupling.
