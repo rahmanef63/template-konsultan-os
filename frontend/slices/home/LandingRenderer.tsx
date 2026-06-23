@@ -59,6 +59,7 @@ export function renderLanding(section: LandingSection, deps: Deps) {
           <div className="relative isolate overflow-hidden">
             <HeroLayers placement="background" layers={section.layers} />
             <HeroBlock
+              align={cfgString(cfg, "align") === "center" ? "center" : "left"}
               glow={Boolean(section.shade)}
               badge={parseConfigBadge(section.config) ?? "Boutique consulting · Indonesia"}
               title={section.title}
