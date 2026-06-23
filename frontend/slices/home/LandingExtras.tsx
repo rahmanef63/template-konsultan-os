@@ -50,12 +50,12 @@ export const KONSULTAN_STATS: StatItem[] = [
 ];
 
 export const KONSULTAN_CLIENTS = [
-  "PT Acme Indonesia",
-  "Foobar Group",
-  "Beta Labs",
-  "Lorem Manufaktur",
-  "Ipsum Retail",
-  "Dolor Logistik",
+  "PT Sinar Mandiri",
+  "Nusantara Group",
+  "Bahtera Logistik",
+  "Sentosa Manufaktur",
+  "Andalan Retail",
+  "Mitra Sehat Group",
 ];
 
 export const KONSULTAN_FAQS: FaqItem[] = [
