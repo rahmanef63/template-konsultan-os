@@ -12,7 +12,7 @@ import { SectionHead } from "@/features/_shared/ui/section-head";
 import { UpdateCard } from "@/components/admin/update-card";
 import { BackupCard } from "@/components/admin/backup-card";
 import { ThemePresetSwitcher } from "@/features/theme-presets";
-import { ImagePickerButton, imageRef } from "@/features/image-picker";
+import { ImagePickerButton } from "@/features/image-picker";
 import { parseSocials } from "@/features/_shared/ui/site-footer";
 import { DEFAULT_SITE_CONFIG } from "@/features/_app/site-config";
 import { ResetLandingCard } from "@/features/_shared/ui/reset-landing-card";
@@ -142,7 +142,7 @@ export function SettingsView() {
                   title="Logo"
                   onUpload={onUpload}
                   searchUnsplash={undefined}
-                  onChange={(img) => setLogoUrl(imageRef(img) ?? "")}
+                  onChange={(img) => setLogoUrl(img?.value ?? "")}
                 />
               </div>
             </div>
