@@ -32,6 +32,7 @@
     "ai": "^4.3.19",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "1.1.1",
     "convex": "^1.39.1",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
@@ -43,11 +44,9 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-is": "^19.2.7",
     "recharts": "^3.8.0",
     "sonner": "^1.7.1",
-    "tailwind-merge": "^2.5.5",
-    "zod": "^3.25.76"
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
