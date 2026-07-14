@@ -57,7 +57,7 @@ export function renderLanding(section: LandingSection, deps: Deps) {
               gated on `shade` so by default the layer image shows in full
               real color. */}
           <div className="relative isolate overflow-hidden">
-            <HeroLayers placement="background" layers={section.layers} />
+            <HeroLayers placement="background" layers={section.layers} fallbackImg={section.bgImageUrl || "/hero.webp"} />
             <HeroBlock
               align={cfgString(cfg, "align") === "center" ? "center" : "left"}
               glow={Boolean(section.shade)}
