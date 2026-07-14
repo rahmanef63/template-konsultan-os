@@ -31,8 +31,14 @@ import type { Action, State } from "./types";
 // On read we map `_id` -> `id`. On upsert we pass `id` only when it's a known
 // Convex id (existing row); a fresh client-generated id -> insert.
 
+// Map Convex `_id` -> frontend `id` AND drop the system fields (`_id`,
+// `_creationTime`). Keeping them meant edit-dispatch forwarded them into the
+// strict upsert validators (which declare no such args), so every "edit
+// existing row -> Save" threw ArgumentValidationError and silently no-op'd.
 const withId = <T,>(rows: ReadonlyArray<Record<string, unknown>> | undefined): T[] =>
-  ((rows ?? []) as Array<Record<string, unknown>>).map((r) => ({ ...r, id: r._id })) as T[];
+  ((rows ?? []) as Array<Record<string, unknown>>).map(
+    ({ _id, _creationTime: _ct, ...r }) => ({ ...r, id: _id }),
+  ) as T[];
 
 function Provider({ children }: { children: React.ReactNode }) {
   if (IS_DEMO) return <DemoProvider>{children}</DemoProvider>;
