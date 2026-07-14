@@ -139,7 +139,7 @@ const FAQS = [
 // editable example data and there is no convex<->render drift. Table-backed
 // kinds (portfolio/blog) render from their own tables and carry no config here.
 const LANDING = [
-  { id: "ls-hero", order: 10, kind: "hero", title: HERO.title, subtitle: HERO.subtitle, enabled: true, config: JSON.stringify({ badge: HERO.badge }), layers: [{ id: "hero-photo", type: "image", placement: "background", opacity: 100, enabled: true, url: "/hero.webp" }] },
+  { id: "ls-hero", order: 10, kind: "hero", title: HERO.title, subtitle: HERO.subtitle, enabled: true, config: JSON.stringify({ badge: HERO.badge }), layers: [{ id: "hero-photo", type: "image", placement: "background", opacity: 100, enabled: true, url: "/hero.webp" }, { id: "hero-overlay", type: "color", placement: "background", opacity: 30, enabled: true, color: "var(--primary)" }] },
   { id: "ls-stats", order: 15, kind: "stats", title: "Track record yang bisa diaudit", subtitle: "Angka berjalan dari engagement yang kami tangani sejak hari pertama.", enabled: true, config: JSON.stringify({ stats: STATS, clients: LANDING_CLIENTS }) },
   { id: "ls-services", order: 20, kind: "services", title: "Empat area utama", subtitle: "Fokus di strategi, operasi, organisasi, dan workshop intensif.", enabled: true, config: JSON.stringify({ items: LANDING_SERVICES }) },
   { id: "ls-features", order: 30, kind: "features", title: "Tools yang menjalankan praktik kami", subtitle: "Sistem ini sama yang juga bisa Anda pakai untuk firma sendiri.", enabled: true, config: JSON.stringify({ items: FEATURES }) },
