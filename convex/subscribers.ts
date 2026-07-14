@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { optionalUser } from "./_shared/auth";
+import { optionalUser, requireUser } from "./_shared/auth";
 import { limitPublicWrite } from "./_shared/rateLimit";
 
 export const list = query({
@@ -34,5 +34,30 @@ export const subscribe = mutation({
       status: "pending",
       ts: Date.now(),
     });
+  },
+});
+
+// Admin: change a subscriber's status (e.g. mark unsubscribed).
+export const setStatus = mutation({
+  args: {
+    id: v.id("subscribers"),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("confirmed"),
+      v.literal("unsubscribed"),
+    ),
+  },
+  handler: async (ctx, { id, status }) => {
+    await requireUser(ctx);
+    await ctx.db.patch(id, { status });
+  },
+});
+
+// Admin: delete a subscriber.
+export const remove = mutation({
+  args: { id: v.id("subscribers") },
+  handler: async (ctx, { id }) => {
+    await requireUser(ctx);
+    await ctx.db.delete(id);
   },
 });

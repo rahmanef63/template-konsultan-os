@@ -37,6 +37,7 @@ import type * as http from "../http.js";
 import type * as invoices from "../invoices.js";
 import type * as kb from "../kb.js";
 import type * as landing from "../landing.js";
+import type * as landingContent from "../landingContent.js";
 import type * as pages from "../pages.js";
 import type * as projects from "../projects.js";
 import type * as proposals from "../proposals.js";
@@ -85,6 +86,7 @@ declare const fullApi: ApiFromModules<{
   invoices: typeof invoices;
   kb: typeof kb;
   landing: typeof landing;
+  landingContent: typeof landingContent;
   pages: typeof pages;
   projects: typeof projects;
   proposals: typeof proposals;
